@@ -1,5 +1,7 @@
 var categorias = []
 
+var campos_personalizados = [];
+
 function addCategoria(categoria){
     categorias.push(categoria);
 }

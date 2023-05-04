@@ -1,8 +1,7 @@
 const { json } = require('express');
 const express = require('express');
-const { addCategoria, getCategoria} = require('./repository/BDCategorias');
+const { addCategoria, getCategoria } = require('./repository/BDCategorias');
 const { getProdutos, addProdutos } = require('./repository/BDProdutos');
-
 const categoriaR = (require('./repository/BDCategorias'));
 const produtoR = (require('./repository/BDProdutos'));
 
@@ -19,13 +18,10 @@ app.use(express.urlencoded({
 }));
 
 let produtoId = 1;
-let camposPersonalizados = [];
-app.get('/categorias', (req, res) => {
 
+app.get('/categorias', (req, res) => {
   res.render('categorias', {categorias: getCategoria()});
 });
-
-
 
 app.get('/produtos', (req, res) => {
   res.render('produtos', {produtos: getProdutos()});
@@ -38,27 +34,20 @@ app.get('/categoria-deletar', (req, res) => {
 });
 
 app.post('/categoria-salvar', (req, res) => {
-  const chave = req.body.chave;
-  const valor = req.body.valor;
-  const camposCustomizados = camposPersonalizados;
-  const categoria = new Categoria({
-    chave: chave,
-    valor: valor,
-    campos_customizados: camposCustomizados
-  });
-  addCategoria(categoria);
+  const newCategoria = {
+    chave : req.body.chave,
+    valor : req.body.valor,
+    campos_personalizados : req.body.campos_personalizados
+  };
+  addCategoria(newCategoria);
   res.redirect('/categorias');
 });
-
 
   //produtos
 
 app.get('/cadastrarProduto', (req, res) => {
-  res.render('cadastrarProduto', {
-      categorias: getCategoria(),
-  });
+  res.render('cadastrarProduto', {categorias: getCategoria()});
 });
-
 
 app.post('/cadastrar-produto', (req, res) => {
   const newProduto = {
@@ -89,6 +78,11 @@ app.post('/produto-editar', (req, res) => {
   };
   produtoR.editarProduto(editedProduto);
   res.redirect('/produtos');
+});
+
+app.get('/campos', (req, res) => {
+  const categorias = getCategoria();
+  res.json(categorias);
 });
 
 app.listen(port, () => {

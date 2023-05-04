@@ -20,15 +20,13 @@
 
             <label for="valor">Valor:</label>
             <input type="text" name="valor" id="valor">
-
+          
             <label for="campos_customizados">Campos customizados:</label>
             <input type="text" name="campos_customizados" id="campos_customizados">
             <button  type="button" id="adicionar_campo" onclick="adicionarCampo()">Adicionar campo</button>
-
-            <button type="submit">Salvar</button>
+            <ul id="campos_personalizados"></ul>
+            <button type="submit" onclick="enviarFormulario()">Salvar</button>
         </form>
-        <ul id="campos_personalizados"></ul>
-
 
 
     </div>
@@ -50,15 +48,15 @@
                   <td><%= categorias[i].chave %></td>
                   <td><%= categorias[i].valor %></td>
                   <td>
-                    <% for (let j = 0; j < categorias[i].campos_customizados.length; j++) { %>
-                      <%= categorias[i].campos_customizados[j] %><br>
-                    <% } %>
+                      <%= categorias[i].campos_personalizados %><br>
                   </td>
                   <td>
                     <a href="/categoria-deletar?chave=<%= categorias[i].chave %>"
                        onclick="return confirm('Tem certeza que deseja excluir esta categoria?')">
                       Excluir
                     </a>
+                  </td>
+                    
                   </td>
                 </tr>
               <% } %>
