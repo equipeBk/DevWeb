@@ -1,0 +1,119 @@
+body {
+    text-align: center;
+    background-color: #ffffff;
+    font-family: initial;
+    letter-spacing: 1px;
+    margin: auto;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-size: 25px;
+}
+
+div {
+    background-color: #97e1fe;
+    margin: 40px 34% 30px 34%;
+    padding: 10px 10px;
+    border-radius: 20px;
+}
+
+div .inicio {
+    margin-top: 20%;
+}
+
+.card:hover {
+    transform: scale(1.1);
+    transition: 0.5s;
+
+}
+
+table {
+    background-color: #97e1fe;
+    margin: 10px auto 20px;
+    font-size: 18px;
+    text-align: justify;
+}
+
+a:link,
+a:hover {
+    color: #1d3841;
+    text-decoration: underline;
+    cursor: auto;
+}
+
+a:link,
+a:active {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+td {
+    padding: 5px;
+    border: 1px solid #190fa1;
+    border-radius: 4px;
+}
+
+form input,
+select,
+button {
+    border: 0.1px solid black;
+    border-radius: 20px;
+    padding: 3px;
+}
+
+button {
+    margin: 20px 20px 0px 20px;
+    padding: 15px 10px;
+    text-transform: uppercase;
+}
+
+button:hover {
+    transform: scale(1.1);
+    background-color: #f0d3e7;
+
+}.campos-perso {
+    margin: 0px 5px 5px 5px;
+    display: flex;
+    align-items: center;
+}
+.campos-perso #campo{
+    margin-left: 0px;
+    display:block;
+    margin-bottom: 0px;
+    margin-left: 100px;
+}
+.campos-perso #campo {
+    margin: 0px 15px 0px 5px;
+    padding: 5px 5px;
+    text-transform: uppercase;
+    font-size: 9px;
+}
+
+.campos-perso label {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: initial;
+    align-self: center;
+}
+
+form label {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: initial;
+}
+
+input,
+select {
+    display: block;
+    margin-left: 28%;
+    margin-bottom: 10px;
+
+}
+
+.btn-retorno {
+    margin: 10px 20px 0px 20px;
+    padding: 15px 10px;
+    text-transform: uppercase;
+
+}

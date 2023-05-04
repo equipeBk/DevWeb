@@ -1,0 +1,32 @@
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>editar produto</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div>
+    <form action="/produto-editar" method="POST">
+      <input type="hidden" name="id" value="<%= produto.id %>">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" value="<%= produto.nome %>">
+      <label for="preco">Preço:</label>
+      <input type="text" id="preco" name="preco" value="<%= produto.preco %>">
+      <label for="categoria">Categoria:</label>
+      <select id="categoria" name="categoria">
+        <% for (let i = 0; i < categorias.length; i++) { %>
+          <% if (produto.categoria === categorias[i].chave) { %>
+            <option value="<%= categorias[i].chave %>" selected><%= categorias[i].valor %></option>
+          <% } else { %>
+            <option value="<%= categorias[i].chave %>"><%= categorias[i].valor %></option>
+          <% } %>
+        <% } %>
+      </select>
+      <label for="descricao">Descrição:</label>
+      <textarea id="descricao" name="descricao" rows="5" cols="50"><%= produto.descricao %></textarea>
+      <button type="submit" value="Salvar">Salvar</button>
+    </form>
+  </div>
+</body>
+</html>
