@@ -17,12 +17,10 @@
             <input type="text" name="preco" id="preco" value="0.00" />
             <label for="categoria">Categoria</label>
             <select name="categoria" id="categoria">
-                <% for (let i = 0; i < categorias.length; i++) { %>
-                    <option value="<%= categorias[i].chave %>"><%= categorias[i].valor %></option>
-                <% } %>
+
             </select>
             <label for="descricao">Descrição</label>
-            <textarea id="descricao" name="descricao" rows="5" cols="45"></textarea>
+            
             <button type="submit">Cadastrar</button>
         </form>
         
