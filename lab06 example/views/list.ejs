@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Express - Basic Auth</title>
+        <title>Home</title>
         <link rel="stylesheet" href="/style.css">
     </head>
     <body>
 
-        <h1>Express - Basic Auth</h1>
-        User: <%= loggedUser.username %>
+        <h1>Raiz</h1>
+        User: <%= loggedUser.username %> <br> <br>
+
+        <a href="/prod/new">Add Product</a><br/> 
+    <a href="list">List Products</a> <br>
+    <a href="/category/new">Add category</a> <br>
+    <a href="/category/list">List Category</a>
+    <a href="/prod/myProd">Meus Produtos</a>
+
+
         <h2>Product List</h2>
         <div>
             <table>
@@ -45,7 +53,6 @@
             </table> 
         </div>
 
-        <button><a href="http://localhost:3000/home">home</a></button>
        
     </body>
 </html>

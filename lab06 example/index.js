@@ -53,11 +53,13 @@ app.use((req, res, next) => {
   });
 })
 
-app.get('/home', (req, res) => {
-  console.log('=== GET -/home');
-  console.log(req.user);
-  res.render('home', {
-    user: loggedUser
+///todos os produtos
+app.get('/list', (req, res) => {
+  console.log('GET - list')
+  mongoRepository.getAllProds().then((foundProds) => {
+    res.render('list', {
+      products: foundProds
+    })
   })
 })
 
@@ -107,7 +109,7 @@ app.post('/prod/new', (req, res) => {
   mongoRepository.saveProd(req.body).then((insertedProd) => {
     console.log('Inserted Product')
     console.log(insertedProd)
-    res.redirect('/prod/list')
+    res.redirect('list')
   })
 
 
@@ -116,22 +118,13 @@ app.post('/prod/new', (req, res) => {
 app.get('/prod/myProd', (req, res) => {
   console.log('GET - /prod/list')
   mongoRepository.getProdsByUser(req.user).then((foundProds) => {
-    res.render('prod/list', {
+    res.render('list', {
       loggedUser: req.user,
       products: foundProds
     })
   })
 })
 
-///todos os produtos
-app.get('/prod/list', (req, res) => {
-  console.log('GET - /prod/list')
-  mongoRepository.getAllProds().then((foundProds) => {
-    res.render('prod/list', {
-      products: foundProds
-    })
-  })
-})
 
 ///listando as categorias
 app.get('/category/list', (req, res) => {
