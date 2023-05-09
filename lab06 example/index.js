@@ -53,7 +53,18 @@ app.use((req, res, next) => {
   });
 })
 
+
+
 ///todos os produtos
+app.get('/', (req, res) => {
+  console.log('GET - list')
+  mongoRepository.getAllProds().then((foundProds) => {
+    res.render('list', {
+      products: foundProds
+    })
+  })
+})
+
 app.get('/list', (req, res) => {
   console.log('GET - list')
   mongoRepository.getAllProds().then((foundProds) => {
@@ -77,7 +88,7 @@ app.post('/category/new', (req, res) => {
   mongoRepository.saveCategory(req.body).then((insertedCategory) => {
     console.log('Inserted Category')
     console.log(insertedCategory)
-    res.redirect('/category/new')
+    res.redirect('/category/list')
   })
 
 
@@ -92,16 +103,17 @@ app.use((req, res, next) => {
 })
 
 
-app.get('/prod/new', (req, res) => {
-  res.render('prod/new', {
+app.get('/Produto/Produto-novo', (req, res) => {
+  console.log('GET - /Produto/Produto-novo')
+  res.render('Produto/Produto-novo', {
     user: req.user,
     category: req.category
   })
 })
 
 ///novo produto
-app.post('/prod/new', (req, res) => {
-  console.log('POST - /prod/new')
+app.post('/Produto/Produto-novo', (req, res) => {
+  console.log('POST - /Produto/Produto-novo')
   let newProd = req.body;
   newProd.createdBy = req.user;
   newProd.price = parseFloat(newProd.price)
@@ -109,14 +121,13 @@ app.post('/prod/new', (req, res) => {
   mongoRepository.saveProd(req.body).then((insertedProd) => {
     console.log('Inserted Product')
     console.log(insertedProd)
-    res.redirect('list')
+    res.redirect('/list')
   })
-
 
 })
 ///os produtos do usuario logado
-app.get('/prod/myProd', (req, res) => {
-  console.log('GET - /prod/list')
+app.get('/Produto/Meus-produtos', (req, res) => {
+  console.log('GET - list')
   mongoRepository.getProdsByUser(req.user).then((foundProds) => {
     res.render('list', {
       loggedUser: req.user,
