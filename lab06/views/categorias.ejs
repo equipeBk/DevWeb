@@ -1,0 +1,81 @@
+                        <!DOCTYPE html>
+                        <html lang="en">
+
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>CATEGORIAS</title>
+                            <link rel="stylesheet" href="css/style.css">
+                        </head>
+
+                        <body>
+                            <div>
+                                <h1>Cadastro de categoria</h1>
+                                <form action="/categoria-salvar" method="POST">
+                                    <label for="chave">chave:</label>
+                                    <input type="text" id="chave" name="chave" />
+                                    <label for="valor">valor:</label>
+                                    <input type="text" id="valor" name="valor" />
+                                    <button type="submit">Cadastrar</button>
+                                </form>
+
+                            </div>
+
+                            <div>
+                                <h2>Categorias</h2>
+
+<table>
+  <tr>
+    <td>Chave</td>
+    <td>Valor</td>
+    <td>Campos customizados</td> <!-- Nova coluna -->
+  </tr>
+  <% for (let i=0; i < categorias.length; i++) { %>
+  <tr>
+    <td>
+      <%= categorias[i].chave %>
+    </td>
+    <td>
+      <%= categorias[i].valor %>
+    </td>
+    <td id="campos-customizados-<%= categorias[i].chave %>"></td> <!-- ID da coluna de campos customizados -->
+    <td>
+      <a href="/categoria-deletar?chave=<%= categorias[i].chave %>"><img src="/img/lixeira-deletar.png" alt="" width="20px"></a>
+    </td>
+  </tr>
+  <% } %>
+</table>
+
+                            </div>
+
+                            <div>
+                        <h2>Categoria A</h2>
+                    <h2>Campos customizados</h2>
+                    <ul id="lista-campos"></ul>
+                    <div>
+                    <input type="text" id="campo-novo" placeholder="Digite o novo campo aqui">
+                    <button id="btn-add-campo">Adicionar campo</button>
+                    </div>
+
+                       <script>
+  const listaCampos = document.getElementById("lista-campos");
+  const campoNovo = document.getElementById("campo-novo");
+  const btnAddCampo = document.getElementById("btn-add-campo");
+
+  btnAddCampo.addEventListener("click", () => {
+    const novoCampo = campoNovo.value.trim();
+    if (novoCampo) {
+      const li = document.createElement("li");
+      li.textContent = novoCampo;
+      listaCampos.appendChild(li);
+      campoNovo.value = "";
+    }
+  });
+</script>
+
+
+                            <a href="http://localhost:3000/"><button class="btn-retorno">Ínicio</button></a>
+                        </body>
+
+                        </html>
