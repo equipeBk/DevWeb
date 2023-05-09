@@ -1,9 +1,14 @@
 body {
     text-align: center;
-    background-color: #bbb6bb;
+    background-color: #ffffff;
     font-family: initial;
     letter-spacing: 1px;
     margin: auto;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-size: 25px;
 }
 
 div {
@@ -13,10 +18,14 @@ div {
     border-radius: 20px;
 }
 
+div .inicio {
+    margin-top: 20%;
+}
+
 .card:hover {
     transform: scale(1.1);
     transition: 0.5s;
-    
+
 }
 
 table {
@@ -26,14 +35,14 @@ table {
     text-align: justify;
 }
 
-table a:link,
+a:link,
 a:hover {
     color: #1d3841;
     text-decoration: underline;
     cursor: auto;
 }
 
-ul a:link,
+a:link,
 a:active {
     text-decoration: none;
     cursor: pointer;
@@ -41,44 +50,70 @@ a:active {
 
 td {
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid #190fa1;
+    border-radius: 4px;
 }
-form input, select, button{
-    border: 0.1px solid black;    
+
+form input,
+select,
+button {
+    border: 0.1px solid black;
     border-radius: 20px;
     padding: 3px;
 }
-button{
-    margin: 20px;
+
+button {
+    margin: 20px 20px 0px 20px;
+    padding: 15px 10px;
+    text-transform: uppercase;
 }
-form label{
+
+button:hover {
+    transform: scale(1.1);
+    background-color: #f0d3e7;
+
+}.campos-perso {
+    margin: 0px 5px 5px 5px;
+    display: flex;
+    align-items: center;
+}
+.campos-perso #campo{
+    margin-left: 0px;
+    display:block;
+    margin-bottom: 0px;
+    margin-left: 100px;
+}
+.campos-perso #campo {
+    margin: 0px 15px 0px 5px;
+    padding: 5px 5px;
+    text-transform: uppercase;
+    font-size: 9px;
+}
+
+.campos-perso label {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: initial;
+    align-self: center;
+}
+
+form label {
     text-transform: uppercase;
     font-size: 12px;
     font-family: initial;
 }
-input, select{
-   display: block;
-   margin-left: 28% ;
-   margin-bottom: 10px;
+
+input,
+select {
+    display: block;
+    margin-left: 28%;
+    margin-bottom: 10px;
+
 }
 
-.busca h1, .card{
-    font-size: 15px;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    letter-spacing: 1px;
+.btn-retorno {
+    margin: 10px 20px 0px 20px;
+    padding: 15px 10px;
     text-transform: uppercase;
-}
 
-.lista{
-    text-align: justify;
-    margin: 15px 37%;
-    
-}
-.lista p{
-    margin: 2px;
-}
-.lista ul li {
-    list-style: none;
-    padding: 0;
-    padding-inline-start: 0;
 }

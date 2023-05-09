@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATEGORIAS</title>
+    <link rel="stylesheet" href="/style.css">
+
+</head>
+
+<body>
+
+    <div>
+        <h1>user: <%= loggedUser.username %></h1>
+        <h1>Cadastro de categoria</h1>
+        <form action="/category/new" method="POST">
+            <label for="key">Key:</label>
+            <input type="text" name="key">
+
+            <label for="value">Value:</label>
+            <input type="text" name="value">
+  
+            <button type="submit">Salvar</button>
+        </form>
+
+
+    </div>
+    
+
+
+    <button><a href="http://localhost:3000/home">home</a></button>
+</body>
+
+</html>

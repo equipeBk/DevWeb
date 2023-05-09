@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div>
+        <h2>Categorias</h2>
+        <h2>user: <%= loggedUser.username %> </h2>
+        <table>
+            <thead>
+              <tr>
+                <th>Chave</th>
+                <th>Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (let i = 0; i < category.length; i++) { %>
+                <tr>
+                  <td><%= category[i].key %></td>
+                  <td><%= category[i].value %></td>
+                  <td>
+                    <a href="/categoria-deletar?chave=<%= category[i].key %>"
+                       onclick="return confirm('Tem certeza que deseja excluir esta categoria?')">
+                      Excluir
+                    </a>
+                  </td>
+                    
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+
+    </div>
+    <button><a href="http://localhost:3000/home">home</a></button>
+</body>
+</html>

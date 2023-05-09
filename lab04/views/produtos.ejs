@@ -11,6 +11,7 @@
    <a href="/cadastrarProduto"> <button> Cadastrar </button> </a>
     <div>
         <h1>Produtos cadastrados</h1>
+        <h2>user: <%= username %> </h2>
 
         <table>
             <tr>
@@ -18,6 +19,7 @@
                 <td>NOME</td>
                 <td>VALOR</td>
                 <td>DESCRIÇÃO</td>
+                <td>Autor</td>
             </tr>
             <% for (let i = 0; i < produtos.length; i++) { %>
             <tr>
@@ -25,6 +27,7 @@
                 <td><%= produtos[i].nome %></td>
                 <td><%= produtos[i].preco %></td>
                 <td><%= produtos[i].descricao %></td>
+                <td></td>
                 <td>
                     <a href="http://localhost:3000/produto-editar?id=<%= produtos[i].id %>"> <img src="/img/lapis-editar.png" alt="" width="30px"></a>
                 </td>

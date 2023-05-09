@@ -20,12 +20,8 @@
 
             <label for="valor">Valor:</label>
             <input type="text" name="valor" id="valor">
-          
-            <label for="campos_customizados">Campos customizados:</label>
-            <input type="text" name="campos_customizados" id="campos_customizados">
-            <button  type="button" id="adicionar_campo" onclick="adicionarCampo()">Adicionar campo</button>
-            <ul id="campos_personalizados"></ul>
-            <button type="submit" onclick="enviarFormulario()">Salvar</button>
+  
+            <button type="submit">Salvar</button>
         </form>
 
 
@@ -47,9 +43,6 @@
                 <tr>
                   <td><%= categorias[i].chave %></td>
                   <td><%= categorias[i].valor %></td>
-                  <td>
-                      <%= categorias[i].campos_personalizados %><br>
-                  </td>
                   <td>
                     <a href="/categoria-deletar?chave=<%= categorias[i].chave %>"
                        onclick="return confirm('Tem certeza que deseja excluir esta categoria?')">

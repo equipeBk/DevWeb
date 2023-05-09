@@ -9,6 +9,7 @@ const dbName = 'ufcweb2022';
 
 var user_collection;
 var product_collection;
+var category_collection;
 
 async function main() {
   // Use connect method to connect to the server
@@ -17,6 +18,7 @@ async function main() {
   const db = client.db(dbName);
   user_collection = db.collection('user');
   product_collection = db.collection('product');
+  category_collection =db.collection('category');
   // the following code examples can be pasted here...
    
   return 'done.';
@@ -40,6 +42,13 @@ async function saveProd(product){
   return result;
 }
 
+async function saveCategory(category){
+  const result = await category_collection.insertOne(category)
+  console.log('Repository - saveCategory - Inserted category')
+  console.log(result)
+  return result;
+}
+
 async function getProdsByUser(user) {
   console.log('getProdsByUser - Username param:', user.username)
   
@@ -49,6 +58,25 @@ async function getProdsByUser(user) {
   return findResult;
 }
 
+async function getCategorysByUser(user) {
+  console.log('getCategorysByUser - Username param:', user.username)
+  
+  const query = { "createdBy.username": user.username };
+  const findResult = await category_collection.find(query).toArray();
+  console.log('Repository - getCategorysByUser - Found documents =>', findResult);
+  return findResult;
+}
+
+async function getAllProds() {
+  const findResult = await product_collection.find({}).toArray();
+  console.log('Repository - getAllProds - Found documents =>', findResult);
+  return findResult;
+}
+
+
 exports.getUsers = getUsers;
 exports.saveProd = saveProd;
 exports.getProdsByUser = getProdsByUser;
+exports.saveCategory = saveCategory;
+exports.getCategorysByUser = getCategorysByUser;
+exports.getAllProds = getAllProds;
