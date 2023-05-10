@@ -20,6 +20,15 @@ app.use((req, res, next) => {
   next();
 
 })
+///todos os produtos
+app.get('/', (req, res) => {
+  console.log('GET - list')
+  mongoRepository.getAllProds().then((foundProds) => {
+    res.render('list', {
+      products: foundProds
+    })
+  })
+})
 
 app.use(basicAuth({
   authorizer: userAuthorizer,
@@ -54,17 +63,6 @@ app.use((req, res, next) => {
 })
 
 
-
-///todos os produtos
-app.get('/', (req, res) => {
-  console.log('GET - list')
-  mongoRepository.getAllProds().then((foundProds) => {
-    res.render('list', {
-      products: foundProds
-    })
-  })
-})
-
 app.get('/list', (req, res) => {
   console.log('GET - list')
   mongoRepository.getAllProds().then((foundProds) => {
@@ -96,7 +94,7 @@ app.post('/category/new', (req, res) => {
 
 app.use((req, res, next) => {
   console.log('=== Category Middleware');
-  mongoRepository.getCategorysByUser(req.user).then((foundCategorys) => {
+  mongoRepository.getAllCategorys().then((foundCategorys) => {
     req.category = foundCategorys;
     next();
   })
@@ -140,7 +138,7 @@ app.get('/Produto/Meus-produtos', (req, res) => {
 ///listando as categorias
 app.get('/category/list', (req, res) => {
   console.log('GET - /category/list')
-  mongoRepository.getCategorysByUser(req.user).then((foundCategorys) => {
+  mongoRepository.getAllCategorys().then((foundCategorys) => {
     res.render('category/list', {
       loggedUser: req.user,
       category: foundCategorys
@@ -148,6 +146,14 @@ app.get('/category/list', (req, res) => {
   })
 })
 
+app.get('/categoria-deletar', (req, res) => {
+  const deleteCategory = { chave: req.body.chave} // Obtém o ID da categoria a ser excluída do corpo da requisição
+  mongoRepository.deleteCategory(deleteCategory)
+    .then(() => {
+      console.log(`Categoria com Value ${deleteCategory.chave} excluída com sucesso`)
+      res.redirect('/category/new')
+    })
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
