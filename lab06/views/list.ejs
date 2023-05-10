@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <br>
+    <div class="links">
+        <a href="/Produto/Produto-novo">Add Product</a><br />
+        <a href="/category/new">Add category</a> <br>
+        <a href="/category/list">List Category</a> <br>
+        <a href="/Produto/Meus-produtos">Meus Produtos</a>
+    </div>
+
+    <div>
+        <h2>Product List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td>description</td>
+                    <td>Category</td>
+                    <td>User cad</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i=0; i < products.length; i++) {%>
+                    <tr>
+                        <td>
+                            <%= products[i]._id %>
+                        </td>
+                        <td>
+                            <%= products[i].name %>
+                        </td>
+                        <td>
+                            <%= products[i].price %>
+                        </td>
+                        <td>
+                            <%=products[i].description %>
+                        </td>
+
+                        <td>
+                            <%= products[i].category %>
+                        </td>
+                        <td>
+                            <%= products[i].createdBy.username %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+
+</html>
