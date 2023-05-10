@@ -16,6 +16,7 @@
               <tr>
                 <th>Chave</th>
                 <th>Valor</th>
+                <th>User</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -24,8 +25,10 @@
                 <tr>
                   <td><%= category[i].key %></td>
                   <td><%= category[i].value %></td>
+                  <td> <%= category[i].createdBy.username %>
+                  </td>
                   <td>
-                    <a href="/categoria-deletar?chave=<%= category[i].key %>"
+                    <a <a href="/categoria-deletar?chave=<%= category[i].chave %>"
                        onclick="return confirm('Tem certeza que deseja excluir esta categoria?')">
                       Excluir
                     </a>
@@ -38,6 +41,7 @@
           </table>
 
     </div>
-    <button><a href="http://localhost:3000">home</a></button>
+    <a href="http://localhost:3000">home</a>
+
 </body>
 </html>

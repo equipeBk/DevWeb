@@ -49,6 +49,12 @@ async function saveCategory(category){
   return result;
 }
 
+async function deleteCategory(category) {
+  const result = await category_collection.deleteOne(category)
+  console.log(`Categoria com value ${deleteCategory.value} excluída do banco de dados`)
+  return result
+}
+
 async function getProdsByUser(user) {
   console.log('getProdsByUser - Username param:', user.username)
   
@@ -73,10 +79,18 @@ async function getAllProds() {
   return findResult;
 }
 
+async function getAllCategorys() {
+  const findResult = await category_collection.find({}).toArray();
+  console.log('Repository - getAllcategorys - Found documents =>', findResult);
+  return findResult;
+}
+
 
 exports.getUsers = getUsers;
 exports.saveProd = saveProd;
 exports.getProdsByUser = getProdsByUser;
 exports.saveCategory = saveCategory;
+exports.deleteCategory = deleteCategory;
 exports.getCategorysByUser = getCategorysByUser;
 exports.getAllProds = getAllProds;
+exports.getAllCategorys = getAllCategorys;

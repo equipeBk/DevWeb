@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Produto cadastro</title>
-        <link rel="stylesheet" href="../style.css">
-    </head>
-    <body>
-<div>
-        <h1>Express - Basic Auth</h1>
-        User: <%= loggedUser.username %>
+
+<head>
+    <title>Produto cadastro</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <div>
+
+        <h1>
+            User: <%= loggedUser.username %>
+        </h1>
         <h2>New Product</h2>
         <form action="/Produto/Produto-novo" method="POST">
-            Name: <input type="text" name="name"/><br/>
-            Price: <input type="number" name="price"/><br/>
-            description: <input type="text" name="description"/><br>
+            Name: <input type="text" name="name" /><br />
+            Price: <input type="number" name="price" /><br />
+            description: <input type="text" name="description" /><br>
             <select name="category">
                 <% for (let i=0; i < category.length; i++) { %>
                     <option value="<%= category[i].value %>">
                         <%= category[i].value %>
                     </option>
-                <% } %>
+                    <% } %>
             </select>
+            <input type="submit" value="Save" />
+        </form>
 
-            
-            <input type="submit" value="Save"/>
-        </form> 
 
-        <button><a href="http://localhost:3000">home</a></button>
-        </div>
+    </div>
+    <a href="http://localhost:3000">home</a>
+</body>
 
-    </body>
 </html>
