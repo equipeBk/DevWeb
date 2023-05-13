@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Bem vindo!</h1>
+    <div>
+        <h1>Carros Cadastrados</h1>
+        <table>
+            <thead>
+                <tr>
+                    <td>Foto</td>
+                    <td>Nome</td>
+                    <td>Marca</td>
+                    <td>Cor</td>
+                    <td>Valor</td>
+                    <td>Preço da diaria</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i=0; i < carros.length; i++) {%>
+                    <tr>
+                        <td>
+                            <%= carros[i]._id %>
+                        </td>
+                        <td>
+                            <%= carros[i].name %>
+                        </td>
+                        <td>
+                            <%= carros[i].marca %>
+                        </td>
+                        <td>
+                            <%=carros[i].cor %>
+                        </td>
+
+                        <td>
+                            <%= carros[i].valor %>
+                        </td>
+                        <td>
+                            <%= carros[i].precoDiaria %>
+                        </td>
+                        <td>
+                            <%= carros[i].status %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+
+        <a href="user/signin">Signin</a>
+        <a href="user/signup">Signup</a>
+    </div>
+
+</body>
+</html>
