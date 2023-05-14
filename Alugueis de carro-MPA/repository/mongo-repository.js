@@ -43,7 +43,7 @@ async function getUsers(email, password) {
 ///salvar os carros cadastrados
 async function saveCarros(carros){
   const result = await carros_collection.insertOne(carros)
-  console.log('Repository - saveProd - Inserted prod')
+  console.log('Repository - saveCarro - Inserted carro')
   console.log(result)
   return result;
 }
@@ -77,14 +77,11 @@ async function deleteUser(user) {
 
 ////deletar carro se disponivel
 async function deleteCarros(carros) {
-  if(carros_collection.status === "disponivel"){
-    const result = await carros_collection.deleteOne(carros)
-    console.log(`Carro com value ${deleteCarros.name} excluída do banco de dados`)
+  const result = await carros_collection.deleteOne(carros)
+  console.log(`Carro com id ${carros} excluído do banco de dados`)
   return result
-  }else{
-    return;
-  }
 }
+
 
 
 ///alugueis do usuario

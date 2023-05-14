@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="/style.css">
 
     <script>
         function check(input) {
@@ -21,8 +22,6 @@
 
 <body>
 
-        <h1>Signin</h1>
-
         <form action="/user/signin" method="post">
 
             Name: <input type="text" name="name"  required/><br />
@@ -34,7 +33,7 @@
             Telefone: <input type="tel" name="telefone"  required> <br>
             Email: <input type="email" name="email" />
             <% if (message) { %>
-                <p><%= message %></p>
+                <p class="error" ><%= message %></p>
               <% } %>
           
         <p>Senha com uma letra maiuscula, um numero, uma minuscula e 8 caracteres</p>

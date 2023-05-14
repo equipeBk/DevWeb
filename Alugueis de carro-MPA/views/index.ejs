@@ -2,60 +2,45 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aluguel de Carros</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <h1>Bem vindo!</h1>
-    <div>
-        <h1>Carros Cadastrados</h1>
-        <table>
-            <thead>
+    <table>
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Cor</th>
+                <th>Valor</th>
+                <th>Preço da diária</th>
+                <th>Status</th>
+                <th>Alugar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < carros.length; i++) { %>
                 <tr>
-                    <td>Foto</td>
-                    <td>Nome</td>
-                    <td>Marca</td>
-                    <td>Cor</td>
-                    <td>Valor</td>
-                    <td>Preço da diaria</td>
-                    <td>Status</td>
+                   <td><img src="<%= carros[i].imagem %>" alt="carro" width="400px"></td> 
+                    <td><%= carros[i].nome %></td>
+                    <td><%= carros[i].marca %></td>
+                    <td><%= carros[i].cor %></td>
+                    <td><%= carros[i].valor %></td>
+                    <td><%= carros[i].precoDiaria %></td>
+                    <td><%= carros[i].status %></td>
+                    <td><a href="/loja/alugar">Alugar</a></td>
                 </tr>
-            </thead>
-            <tbody>
-                <% for (let i=0; i < carros.length; i++) {%>
-                    <tr>
-                        <td>
-                            <%= carros[i]._id %>
-                        </td>
-                        <td>
-                            <%= carros[i].name %>
-                        </td>
-                        <td>
-                            <%= carros[i].marca %>
-                        </td>
-                        <td>
-                            <%=carros[i].cor %>
-                        </td>
-
-                        <td>
-                            <%= carros[i].valor %>
-                        </td>
-                        <td>
-                            <%= carros[i].precoDiaria %>
-                        </td>
-                        <td>
-                            <%= carros[i].status %>
-                        </td>
-                    </tr>
-                    <% } %>
-            </tbody>
-        </table>
-
+            <% } %>
+        </tbody>
+    </table>
+    <div>
         <a href="user/signin">Signin</a>
         <a href="user/signup">Signup</a>
+        <a href="admin/add-carro">admaddcarro</a>
+        <a href="admin/loja">admloja</a>
     </div>
-
 </body>
 </html>

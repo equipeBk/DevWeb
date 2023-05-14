@@ -5,8 +5,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <div>
+        <nav>
+            <ul>
+                <li> <a href="/aluguel"> Meus Alugueis</a></li>
+                <li> <a href="/loja"> Minha loja</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main>
+        <h1>Carros Cadastrados</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Foto</td>
+                        <td>Nome</td>
+                        <td>Marca</td>
+                        <td>Cor</td>
+                        <td>Valor</td>
+                        <td>Preço da diaria</td>
+                        <td>Status</td>
+                        <td>Editar</td>
+                        <td>Remover</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let i=0; i < carros.length; i++) {%>
+                        <tr>
+                            <td>
+                                <img src="<%= carros[i].imagem %>" alt="carro" width="300px">
+                            </td>
+                            <td>
+                                <%= carros[i].nome %>
+                            </td>
+                            <td>
+                                <%= carros[i].marca %>
+                            </td>
+                            <td>
+                                <%=carros[i].cor %>
+                            </td>
     
+                            <td>
+                                <%= carros[i].valor %>
+                            </td>
+                            <td>
+                                <%= carros[i].precoDiaria %>
+                            </td>
+                            <td>
+                                <%= carros[i].status %>
+                            </td>
+                            <td>
+                                <p> função editar</p>
+                            </td>
+                            <td>
+                                <p><a href="/deletar-carro?_id=<%= carros[i]._id %>"
+                                    onclick="return confirm('Tem certeza que deseja excluir esta categoria?')">
+                                   Excluir</p>
+                            </td>
+                            
+                        </tr>
+                        <% } %>
+                </tbody>
+            </table>
+       </main>
+
+       <a href="add-carro">add carro</a>
 </body>
 </html>
