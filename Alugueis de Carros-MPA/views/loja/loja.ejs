@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div>
+        <nav>
+            <ul>
+                <li> <a href="/aluguel"> Meus Alugueis</a></li>
+                <li> <a href="/loja"> Minha loja</a></li>
+                <li> <a href="/conta"> Minha conta</a></li>
+            </ul>
+        </nav>
+    </div>
+
+   <main>
+    <h1>Carros Cadastrados</h1>
+    <form action="/busca" method="post">
+        busca:<input type="text" name="busca">
+    </form>
+        <table>
+            <thead>
+                <tr>
+                    <td>Foto</td>
+                    <td>Nome</td>
+                    <td>Marca</td>
+                    <td>Cor</td>
+                    <td>Valor</td>
+                    <td>Preço da diaria</td>
+                    <td>Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let i=0; i < carros.length; i++) {%>
+                    <tr>
+                        <td>
+                            <img src="<%= carros[i].imagem %>" alt="carro" width="300px">
+                        </td>
+                        <td>
+                            <%= carros[i].nome %>
+                        </td>
+                        <td>
+                            <%= carros[i].marca %>
+                        </td>
+                        <td>
+                            <%=carros[i].cor %>
+                        </td>
+
+                        <td>
+                            <%= carros[i].valor %>
+                        </td>
+                        <td>
+                            <%= carros[i].precoDiaria %>
+                        </td>
+                        <td>
+                            <%= carros[i].status %>
+                        </td>
+                    </tr>
+                    <% } %>
+            </tbody>
+        </table>
+   </main>
+
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <script>
+        function check(input) {
+            if (input.value !== document.getElementById('password').value) {
+                input.setCustomValidity('Passwords must match');
+            } else {
+                // input is valid -- reset the error message
+                input.setCustomValidity('');
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+        <form action="/user/signin" method="post">
+
+            Name: <input type="text" name="name"  required/><br />
+            Data de nascimento: <input type="date" name="dataNascimento"  required/><br />
+            Genero: <select name="genero"  required> <br>
+                <option name="feminino">feminino</option>
+                <option name="masculino">masculino</option>
+            </select> <br>
+            Telefone: <input type="tel" name="telefone"  required> <br>
+            Email: <input type="email" name="email" />
+            <% if (message) { %>
+                <p class="error" ><%= message %></p>
+              <% } %>
+          
+        <p>Senha com uma letra maiuscula, um numero, uma minuscula e 8 caracteres</p>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" required>
+
+        <label for="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" oninput="check(this)" required>
+        <p id="message"></p>
+        <input type="submit" value="Save" /><br>
+        </form>
+
+</body>
+
+</html>

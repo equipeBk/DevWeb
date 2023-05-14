@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Carros</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Bem vindo!</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Cor</th>
+                <th>Valor</th>
+                <th>Preço da diária</th>
+                <th>Status</th>
+                <th>Alugar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < carros.length; i++) { %>
+                <tr>
+                   <td><img src="<%= carros[i].imagem %>" alt="carro" width="400px"></td> 
+                    <td><%= carros[i].nome %></td>
+                    <td><%= carros[i].marca %></td>
+                    <td><%= carros[i].cor %></td>
+                    <td><%= carros[i].valor %></td>
+                    <td><%= carros[i].precoDiaria %></td>
+                    <td><%= carros[i].status %></td>
+                    <td><a href="/loja/alugar">Alugar</a></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+    <div>
+        <a href="user/signin">Signin</a>
+        <a href="user/signup">Signup</a>
+        <a href="admin/add-carro">admaddcarro</a>
+        <a href="admin/loja">admloja</a>
+    </div>
+</body>
+</html>
