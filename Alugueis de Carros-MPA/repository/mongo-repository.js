@@ -39,6 +39,19 @@ async function getUsers(email, password) {
     return findResult;
 }
 
+///pegar o admin
+async function getAdmin(email, password) {
+  const findResult = await admin_collection.find({email: email, password: password}).toArray();
+  console.log('Repository - getUsers - Found documents =>', findResult);
+  return findResult;
+}
+
+////logando o usuario
+async function getUsersFromDB() {
+  const users = await user_collection.find({}).toArray();
+  console.log('Found users:', users);
+  return users.map(({ email, password }) => ({ email, password }));
+}
 
 ///salvar os carros cadastrados
 async function saveCarros(carros){
@@ -119,10 +132,12 @@ async function compareEmails(user) {
 
 
 
+
 exports.deleteUser = deleteUser;
 exports.deleteCarros = deleteCarros;
 
 exports.getUsers = getUsers;
+exports.getAdmin = getAdmin;
 exports.getAluguelByUser = getAluguelByUser;
 exports.getAllCarros = getAllCarros;
 exports.compareEmails = compareEmails;
@@ -131,3 +146,5 @@ exports.isEmailAlreadyRegistered = isEmailAlreadyRegistered;
 
 exports.saveCarros = saveCarros;
 exports.saveUser = saveUser;
+
+exports.getUsersFromDB = getUsersFromDB;

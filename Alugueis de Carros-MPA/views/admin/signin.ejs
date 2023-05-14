@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div>
-        <nav>
-            <ul>
-                <li> <a href="/aluguel"> Meus Alugueis</a></li>
-                <li> <a href="/loja"> Minha loja</a></li>
-            </ul>
-        </nav>
-    </div>
+    <form action="/admin/signin" method="post">
+        Email: <input type="email" name="email" required />
+        Senha: <input type="password" name="password" required />
+        <input type="submit" value="Login" />
+        <% if (message) { %>
+            <p class="error" ><%= message %></p>
+          <% } %>
+      </form>
 </body>
 </html>
