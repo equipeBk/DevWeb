@@ -48,7 +48,7 @@ app.post('/user/signup', async (req, res) => {
     const isEmailRegistered = await mongoRepository.isEmailAlreadyRegistered(email);
     if (isEmailRegistered) {
       console.log(email)
-      res.render('user/signin.ejs', {
+      res.render('user/signup.ejs', {
         message: 'Esse email já está em uso'
       });
     } else {
@@ -106,7 +106,7 @@ app.post('/user/signin', async (req, res) => {
     console.log("usuario existe", user)
     const token = "adasadsadasdadadsadad";
     res.cookie('token', token);
-    res.redirect('/');
+    res.redirect('/loja/loja'); ///tem que dar um jeito de ser a loja do index, mas como lá sem autenticação n pode mostrar alugar, eu n sei oq fazer
   } else {
     console.log("usuario não existe")
     res.render('user/signin.ejs', {

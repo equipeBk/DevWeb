@@ -1,129 +1,80 @@
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  table {
-    border-collapse: collapse;
-    width: 80%;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  th,
-  td {
-    text-align: left;
-    padding: 0.5rem;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  
-  a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
-  button, a {
-    background-color: #008CBA;
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    border-radius: 4px;
-  }
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    margin-top: 40px;
-  }
-  
-  label {
-    font-size: 16px;
-    margin-top: 5px;
-  }
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="password"],
-  select {
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    margin-bottom: 5px;
-  }
-  
-  input[type="submit"] {
-    background-color: #008CBA;
-    color: #fff;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    padding: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 5px;
-  }
-  
-  input[type="submit"]:hover {
-    background-color: #005f70;
-  }
-  
-  p {
-    font-size: 14px;
-    color: #888;
-  }
-  .error{
-    color: red;
-  }
+.header-topo {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  background-color: #f1f1f1;
+  z-index: 999;
+}
 
-  .menu-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    z-index: 999;
+.header-nav {
+  text-align: right;
 }
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  padding: 1rem;
+
+.header-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-a {
+
+.header-nav li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.header-nav li:last-child {
+  margin-right: 0;
+}
+.grid-container {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Define 3 colunas com largura igual */
+  grid-gap: 10px; /* Define o espaçamento entre os itens */
+}
+
+.grid-item {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+.grid-item img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.grid-item h3 {
+  margin-top: 0;
+}
+
+.grid-item a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #fff;
   text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  margin-right: 1rem;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.grid-item a:hover {
+  background-color: #2980b9;
+}
+
+
+/* Estilizando os links como botões */
+.header-nav a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db; /* Cor azul moderna */
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.header-nav a:hover {
+  background-color: #2980b9; /* Cor azul mais escura quando o link é hover */
 }

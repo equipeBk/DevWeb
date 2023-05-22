@@ -8,70 +8,29 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div>
-        <nav>
+    <header class="header-topo">
+        <div class="header-nav">
             <ul>
-                <li> <a href="/aluguel"> Meus Alugueis</a></li>
-                <li> <a href="/loja"> Minha loja</a></li>
+                <li><a href="admin/aluguel">admaalugar</a></li>
+                <li><a href="admin/loja">admloja</a></li>
             </ul>
-        </nav>
+        </div>
+    </header>
+    <div class="grid-container">
+        <% for (let i = 0; i < carros.length; i++) { %>
+            <div class="grid-item">
+                <img src="<%= carros[i].imagem %>" alt="carro" width="400px">
+                <h3><%= carros[i].nome %></h3>
+                <p>Marca: <%= carros[i].marca %></p>
+                <p>Cor: <%= carros[i].cor %></p>
+                <p>Valor: <%= carros[i].valor %></p>
+                <p>Preço da diária: <%= carros[i].precoDiaria %></p>
+                <p>Status: <%= carros[i].status %></p>
+                <a href="/loja/alugar">Alugar</a>
+            </div>
+        <% } %>
     </div>
-
-    <main>
-        <h1>Carros Cadastrados</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <td>Foto</td>
-                        <td>Nome</td>
-                        <td>Marca</td>
-                        <td>Cor</td>
-                        <td>Valor</td>
-                        <td>Preço da diaria</td>
-                        <td>Status</td>
-                        <td>Editar</td>
-                        <td>Remover</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for (let i=0; i < carros.length; i++) {%>
-                        <tr>
-                            <td>
-                                <img src="<%= carros[i].imagem %>" alt="carro" width="300px">
-                            </td>
-                            <td>
-                                <%= carros[i].nome %>
-                            </td>
-                            <td>
-                                <%= carros[i].marca %>
-                            </td>
-                            <td>
-                                <%=carros[i].cor %>
-                            </td>
     
-                            <td>
-                                <%= carros[i].valor %>
-                            </td>
-                            <td>
-                                <%= carros[i].precoDiaria %>
-                            </td>
-                            <td>
-                                <%= carros[i].status %>
-                            </td>
-                            <td>
-                                <p> função editar</p>
-                            </td>
-                            <td>
-                               <a href="/deletar-carro?_id=<%= carros[i]._id %>" onclick="return confirm('Tem certeza que deseja excluir esse veiculo?')">Excluir</a>
-                                    
-                                  
-                            </td>
-                            
-                        </tr>
-                        <% } %>
-                </tbody>
-            </table>
-       </main>
 
        <a href="add-carro">add carro</a>
 </body>
