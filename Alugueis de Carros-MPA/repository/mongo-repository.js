@@ -45,6 +45,7 @@ async function getCarroByName(nome) {
   return findResult;
 }
 
+
 async function editCarro(nomeCarro, novasInformacoes) {
   const updateResult = await carros_collection.updateOne({ nome: nomeCarro }, { $set: novasInformacoes });
   console.log('Repository - editCarro - Updated document:', updateResult);
@@ -52,6 +53,24 @@ async function editCarro(nomeCarro, novasInformacoes) {
 }
 
 
+async function editUser(password, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ password: password }, { $set: novasInformacoes });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+async function editUserPass(emailUser, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ email: emailUser }, { $set: novasInformacoes });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+
+async function editUserPass(emailUser, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ email: emailUser }, {$set: novasInformacoes  });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
 
 ///pegar o admin
 async function getAdmin(email, password) {
@@ -152,7 +171,11 @@ exports.deleteCarros = deleteCarros;
 
 exports.getUsers = getUsers;
 exports.getAdmin = getAdmin;
+
 exports.editCarro = editCarro;
+exports.editUser = editUser;
+exports.editUserPass = editUserPass;
+
 exports.getCarroByName = getCarroByName;
 exports.getAluguelByUser = getAluguelByUser;
 exports.getAllCarros = getAllCarros;

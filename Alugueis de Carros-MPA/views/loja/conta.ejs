@@ -18,5 +18,21 @@
             </ul>
         </nav>
     </div>
+
+    <div class="grid-container">
+        <% if (user) { %>
+          <div class="grid-item">
+            <p>nome: <%= user.name %></p>
+            <p>genero: <%= user.genero %></p>
+            <p>data nascimento: <%= user.dataNascimento %></p>
+            <p>telefone: <%= user.telefone %></p>
+            <p>email: <%= user.email %></p>
+            <a href="/loja/conta-editar">conta editar</a>
+            <a href="/loja/senha-editar">senha editar</a>
+          </div>
+        <% } %>
+      </div>
+      
+
 </body>
 </html>

@@ -70,31 +70,6 @@ const clientAuth = basicAuth({
 });
 
 
-///raiz com lista dos carros
-app.get('/', (req, res) => {
-  console.log('GET - index')
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('index', {
-      carros: foundCarros
-    })
-  })
-})
-
-app.get('/loja', (req, res) => {
-  if(req.session.userAuthenticated){
-      console.log('GET - index')
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('loja/loja', {
-      carros: foundCarros
-    })
-  })
-  }else{
-    res.redirect('/user/signin');
-  }
-
-})
-
-
 ///pagina de criar conta
 app.get('/user/signup', function (req, res) {
   message = req.body.message
@@ -161,12 +136,21 @@ app.post('/user/signin', async (req, res) => {
 
   const user = await mongoRepository.getUsers(email, password);
 
-  if (user.length != 0) {
-    req.session.userAuthenticated = true; // Correção: atribuição correta do valor
-    console.log("usuario existe", user);
+  if (user.length !== 0) {
+    req.session.user = {
+      name: req.body.name,
+      dataNascimento: req.body.dataNascimento,
+      genero: req.body.genero,
+      telefone: req.body.telefone,
+      email: req.body.email,
+      password:req.body.password
+    };
+    console.log(req.session.user)
+    req.session.userAuthenticated = true;
+    console.log("Usuário existe:", user);
     res.redirect('/loja');
   } else {
-    console.log("usuario não existe");
+    console.log("Usuário não existe");
     res.render('user/signin.ejs', {
       message: 'Email ou senha incorretos'
     });
@@ -204,6 +188,141 @@ app.post('/admin/signin', async (req, res) => {
       message: 'Email ou senha incorretos'
     });
   }
+});
+
+app.get('/loja', (req, res) => {
+  if(req.session.userAuthenticated){
+    
+      console.log('GET - index')
+  mongoRepository.getAllCarros().then((foundCarros) => {
+    res.render('loja/loja', {
+      carros: foundCarros,
+      user: req.session.user
+    })
+  })
+  }else{
+    res.redirect('/user/signin');
+  }
+
+})
+app.get('/loja/conta', async (req, res) => {
+  console.log('loja conta edit', req.session.user )
+  if (req.session.userAuthenticated) {
+    res.render('loja/conta', {
+      user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.get('/loja/conta-editar', async (req, res) => {
+  message = req.body.message
+  console.log('loja conta edit', req.session.user )
+  if (req.session.userAuthenticated) {
+    res.render('loja/conta-editar', {
+      user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.post('/loja/conta-editar', async (req, res) => {
+  message = req.body.message
+  if (req.session.userAuthenticated) {
+    try {
+      let emailUser = req.session.user.email;// Obtém o email do user 
+      const novasInformacoes = {
+        name: req.body.name,
+        dataNascimento: req.body.dataNascimento,
+        genero: req.body.genero,
+        telefone: req.body.telefone,
+        email: req.body.email,
+        password: req.session.user.password
+      };
+
+      console.log("emaiol user", emailUser)
+  
+
+      await mongoRepository.editUser(emailUser, novasInformacoes);
+      req.session.user = {
+        name: req.body.name,
+        dataNascimento: req.body.dataNascimento,
+        genero: req.body.genero,
+        telefone: req.body.telefone,
+        email: req.body.email,
+        password: req.session.user.password
+      };
+      console.log("await mongoRepository.editUser(emailUser, novasInformacoes);",await mongoRepository.editUser(emailUser, novasInformacoes))
+      res.redirect('/loja/conta');
+    } catch (err) {
+      console.error(`Erro ao editar o user: ${err}`);
+      res.redirect('/loja/conta');
+    }
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.get('/loja/senha-editar', (req, res) => {
+  message = req.body.message
+  if (req.session.userAuthenticated) {
+    res.render('loja/senha-editar.ejs');
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.post('/loja/senha-editar', async (req,res) => {
+  message = req.body.message
+  let oldpassword = req.body.oldpassword;
+  if (req.session.userAuthenticated) {
+    try {
+      if(oldpassword === req.session.user.password){
+        let emailUser = req.session.user.email;// Obtém o email do user 
+      const novasInformacoes = {
+        password: req.body.password
+      };
+
+      console.log("emaiol user", emailUser)
+  
+
+      await mongoRepository.editUserPass(emailUser, novasInformacoes);
+      req.session.user.password = req.body.password;
+      console.log("await mongoRepository.editUser(emailUser, novasInformacoes);",password)
+      res.render('/loja');
+      }
+      
+    } catch (err) {
+      console.error(`Erro ao editar o user: ${err}`);
+      res.redirect('/loja/conta');
+    }
+  } else {
+    res.redirect('/user/signin');
+  }
+})
+
+
+
+
+///raiz com lista dos carros
+app.get('/', (req, res) => {
+  console.log('GET - index');
+  req.session.user = {
+    name: req.body.name,
+    dataNascimento: req.body.dataNascimento,
+    genero: req.body.genero,
+    telefone: req.body.telefone,
+    email: req.body.email
+  };
+
+  mongoRepository.getAllCarros().then((foundCarros) => {
+    res.render('index', {
+      carros: foundCarros,
+      user: req.session.user // Passa o objeto `user` para o template
+    });
+  });
 });
 
 
@@ -327,7 +446,7 @@ app.post('/busca', (req, res) => {
   mongoRepository.getAllCarros()
     .then(carros => {
       const carrosEncontrados = carros.filter(carro =>
-        carro.nome.toLowerCase().includes(nome) &&
+        carro.nome.toLowerCase().includes(nome) ||
         carro.marca.toLowerCase().includes(marca)
       );
 
@@ -341,6 +460,7 @@ app.post('/busca', (req, res) => {
     });
 });
 
+
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -353,8 +473,6 @@ app.get('/logout', (req, res) => {
 });
 
 
-
-////////testeeeeee///////
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
