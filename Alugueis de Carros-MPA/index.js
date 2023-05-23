@@ -1,7 +1,10 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const basicAuth = require('express-basic-auth');
 const nodemailer = require('nodemailer');
 var CookieSession = require('cookie-session');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const router = express.Router();
 module.exports = router;
 const app = express()
@@ -19,11 +22,52 @@ app.use(express.urlencoded({
 
 const mongoRepository = require('./repository/mongo-repository')
 
+app.use(cookieParser());
 
-app.use((req, res, next) => {
-  console.log('meu middleware')
-  next();
-})
+app.use(
+  session({
+    secret: 'docedebananaébom',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: false,
+      httpOnly: true,
+    },
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://root:rootpwd@localhost:27017', // Substitua pelo URL correto do seu banco de dados MongoDB
+      ttl: 24 * 60 * 60, // Tempo de vida da sessão em segundos (aqui, 1 dia)
+    }),
+  })
+);
+
+
+
+const adminAuth = basicAuth({
+  authorizer: async (email, password, callback) => {
+    const admin = await mongoRepository.getAdmin(email, password); // Apenas busque o administrador pelo e-mail
+    if (!admin || admin.password !== password) {
+      return callback(null, false);
+    }
+    callback(null, true);
+  },
+  unauthorizedResponse: 'Acesso não autorizado como administrador'
+});
+
+
+const clientAuth = basicAuth({
+  authorizer: async (email, password, callback) => {
+    // Buscar os dados do cliente no banco de dados
+    const client = await mongoRepository.getUsers(email, password);
+
+    if (!client || client.password !== password) {
+      return callback(null, false);
+    }
+
+    callback(null, true);
+  },
+  unauthorizedResponse: 'Acesso não autorizado como cliente'
+});
 
 
 ///raiz com lista dos carros
@@ -37,12 +81,17 @@ app.get('/', (req, res) => {
 })
 
 app.get('/loja', (req, res) => {
-  console.log('GET - index')
+  if(req.session.userAuthenticated){
+      console.log('GET - index')
   mongoRepository.getAllCarros().then((foundCarros) => {
     res.render('loja/loja', {
       carros: foundCarros
     })
   })
+  }else{
+    res.redirect('/user/signin');
+  }
+
 })
 
 
@@ -113,17 +162,17 @@ app.post('/user/signin', async (req, res) => {
   const user = await mongoRepository.getUsers(email, password);
 
   if (user.length != 0) {
-    console.log("usuario existe", user)
-    const token = "adasadsadasdadadsadad";
-    res.cookie('token', token);
-    res.redirect('/loja/loja'); ///tem que dar um jeito de ser a loja do index, mas como lá sem autenticação n pode mostrar alugar, eu n sei oq fazer
+    req.session.userAuthenticated = true; // Correção: atribuição correta do valor
+    console.log("usuario existe", user);
+    res.redirect('/loja');
   } else {
-    console.log("usuario não existe")
+    console.log("usuario não existe");
     res.render('user/signin.ejs', {
       message: 'Email ou senha incorretos'
     });
   }
 });
+
 
 /////apg login adm q esqueci q tinha que ser por caminho e n assim
 app.get('/admin/signin', function (req, res) {
@@ -133,77 +182,96 @@ app.get('/admin/signin', function (req, res) {
 });
 
 ////loginadmin
+// Rota de login para o administrador
 app.post('/admin/signin', async (req, res) => {
+  console.log("/admin/signin auth", req.session.adminAuthenticated);
   const email = req.body.email;
   const password = req.body.password;
 
   const admin = await mongoRepository.getAdmin(email, password);
 
-  if (admin.length != 0) {
-    console.log("admin existe", admin)
-    const token = "adaadgdgfgfgfd";
-    res.cookie('token', token);
-    res.redirect('/admin/loja');
+  if (admin.length !== 0) {
+    req.session.user = {
+      email: req.body.email
+    };  
+    req.session.adminAuthenticated = true; // Correção: definir a sessão do admin como autenticada
+    console.log("admin existe", admin);
+    console.log("adm auth", req.session.adminAuthenticated);
+    res.redirect('/admin/loja'); // Correção: redirecionar após definir a sessão
   } else {
-    console.log("admin não existe")
+    console.log("admin não existe");
     res.render('admin/signin.ejs', {
       message: 'Email ou senha incorretos'
     });
   }
 });
 
-////loja 
-app.get('/loja/loja', function (req, res) {
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('loja/loja.ejs', {
-      carros: foundCarros,
-    })
-    console.log("get /loja/loja")
-  })
-});
 
 ///loja admin
 app.get('/admin/loja', function (req, res) {
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('admin/loja.ejs', {
-      carros: foundCarros,
-    })
-    console.log("get admin/loja")
-  })
+  console.log("/admin/loja auth", req.session.adminAuthenticated);
+  const user = req.session.user;
+  if (req.session.adminAuthenticated) {
+    mongoRepository.getAllCarros().then((foundCarros) => {
+      res.render('admin/loja.ejs', {
+        carros: foundCarros,
+      });
+      console.log("get admin/loja");
+    });
+  } else {
+    res.redirect('/admin/signin');
+  }
 });
 
-////adicionar carro
 app.get('/admin/add-carro', function (req, res) {
-  res.render('admin/add-carro.ejs');
+  if(req.session.adminAuthenticated){
+    res.render('admin/add-carro.ejs');
   console.log(" admin/add-carro")
+  }else{
+    res.redirect('/admin/signin');
+  }
+  
 });
 
 app.post('/add-carro', (req, res) => {
+  console.log("/admin/loja auth", req.session.adminAuthenticated);
   console.log('POST - /admin/add-carro')
+  const user = req.session.user;
   let newCarro = req.body;
-  newCarro.createdBy = req.body.admin;
+  newCarro.createdBy = user;
   console.log(newCarro)
-  mongoRepository.saveCarros(req.body).then((insertedCarro) => {
-    console.log('Inserted Carro')
-    console.log(insertedCarro)
-    res.redirect('admin/loja')
-  })
+  if (req.session.adminAuthenticated) {
+    mongoRepository.saveCarros(req.body).then((insertedCarro) => {
+      console.log('Inserted Carro')
+      console.log(insertedCarro)
+      res.redirect('admin/loja')
+    })
+  } else {
+    res.redirect('/admin/signin');
+  }
+  
 })
 
 ///deletar carro
 app.get('/deletar-carro', (req, res) => {
-  let deleteCarros = req._id 
+  if(req.session.adminAuthenticated){
+    let deleteCarros = req._id
   console.error(deleteCarros);
   mongoRepository.deleteCarros(deleteCarros)
     .then(() => {
       console.log(`Categoria com id ${deleteCarros} excluída com sucesso`)
       res.redirect('admin/loja')
     })
+  }else{
+    res.redirect('/admin/signin');
+  }
+  
 })
 
 // Editar carro
 app.get('/admin/carro-editar/:nome', async (req, res) => {
   const nomeCarro = req.params.nome;
+  if(req.session.adminAuthenticated){
   console.log("req AAAAAAAAnome admin/edt carro", nomeCarro);
   try {
     const carro = await mongoRepository.getCarroByName(nomeCarro);
@@ -212,10 +280,14 @@ app.get('/admin/carro-editar/:nome', async (req, res) => {
       res.redirect('/admin/loja');
       return;
     }
-    res.render('admin/carro-editar', { carros: carro });
+    res.render('admin/carro-editar', {
+      carros: carro
+    });
   } catch (err) {
     console.error(`Erro ao obter informações do carro: ${err}`);
     res.redirect('/admin/loja');
+  }}else{
+    res.redirect('/admin/signin');
   }
 });
 
@@ -223,7 +295,8 @@ app.get('/admin/carro-editar/:nome', async (req, res) => {
 // Editar carro por nome
 app.post('/admin/editar-carro/:nome', async (req, res) => {
   console.log("req nome admin/edt carro", req.params.nome)
-  try {
+  if(req.session.adminAuthenticated){
+    try {
     const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
     const novasInformacoes = {
       imagem: req.body.imagem,
@@ -232,13 +305,17 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
       valor: req.body.valor,
       precoDiaria: req.body.precoDiaria,
     };
-    
+
     await mongoRepository.editCarro(nomeCarro, novasInformacoes);
     res.redirect('/admin/loja');
   } catch (err) {
     console.error(`Erro ao editar o carro: ${err}`);
     res.redirect('/admin/loja');
   }
+  }else{
+    res.redirect('/admin/signin');
+  }
+  
 });
 
 
@@ -263,6 +340,18 @@ app.post('/busca', (req, res) => {
       res.redirect('loja/loja');
     });
 });
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Erro ao destruir a sessão:', err);
+      res.sendStatus(500);
+    } else {
+      res.redirect('/'); // Redireciona para a página inicial ou qualquer outra página desejada após o logout
+    }
+  });
+});
+
 
 
 ////////testeeeeee///////
