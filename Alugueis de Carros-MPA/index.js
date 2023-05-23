@@ -36,6 +36,16 @@ app.get('/', (req, res) => {
   })
 })
 
+app.get('/loja', (req, res) => {
+  console.log('GET - index')
+  mongoRepository.getAllCarros().then((foundCarros) => {
+    res.render('loja/loja', {
+      carros: foundCarros
+    })
+  })
+})
+
+
 ///pagina de criar conta
 app.get('/user/signup', function (req, res) {
   message = req.body.message
@@ -171,7 +181,7 @@ app.get('/admin/add-carro', function (req, res) {
 app.post('/add-carro', (req, res) => {
   console.log('POST - /admin/add-carro')
   let newCarro = req.body;
-  newCarro.createdBy = req.admin;
+  newCarro.createdBy = req.body.admin;
   console.log(newCarro)
   mongoRepository.saveCarros(req.body).then((insertedCarro) => {
     console.log('Inserted Carro')
@@ -183,12 +193,54 @@ app.post('/add-carro', (req, res) => {
 ///deletar carro
 app.get('/deletar-carro', (req, res) => {
   let deleteCarros = req._id 
+  console.error(deleteCarros);
   mongoRepository.deleteCarros(deleteCarros)
     .then(() => {
       console.log(`Categoria com id ${deleteCarros} excluída com sucesso`)
       res.redirect('admin/loja')
     })
 })
+
+// Editar carro
+app.get('/admin/carro-editar/:nome', async (req, res) => {
+  const nomeCarro = req.params.nome;
+  console.log("req AAAAAAAAnome admin/edt carro", nomeCarro);
+  try {
+    const carro = await mongoRepository.getCarroByName(nomeCarro);
+    if (!carro) {
+      console.error('Carro não encontrado');
+      res.redirect('/admin/loja');
+      return;
+    }
+    res.render('admin/carro-editar', { carros: carro });
+  } catch (err) {
+    console.error(`Erro ao obter informações do carro: ${err}`);
+    res.redirect('/admin/loja');
+  }
+});
+
+
+// Editar carro por nome
+app.post('/admin/editar-carro/:nome', async (req, res) => {
+  console.log("req nome admin/edt carro", req.params.nome)
+  try {
+    const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
+    const novasInformacoes = {
+      imagem: req.body.imagem,
+      marca: req.body.marca,
+      cor: req.body.cor,
+      valor: req.body.valor,
+      precoDiaria: req.body.precoDiaria,
+    };
+    
+    await mongoRepository.editCarro(nomeCarro, novasInformacoes);
+    res.redirect('/admin/loja');
+  } catch (err) {
+    console.error(`Erro ao editar o carro: ${err}`);
+    res.redirect('/admin/loja');
+  }
+});
+
 
 ///buscar carros
 app.post('/busca', (req, res) => {
@@ -212,6 +264,8 @@ app.post('/busca', (req, res) => {
     });
 });
 
+
+////////testeeeeee///////
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

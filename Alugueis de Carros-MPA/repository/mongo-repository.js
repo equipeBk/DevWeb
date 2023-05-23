@@ -38,6 +38,20 @@ async function getUsers(email, password) {
     console.log('Repository - getUsers - Found documents =>', findResult);
     return findResult;
 }
+///pegar o carro
+async function getCarroByName(nome) {
+  const findResult = await carros_collection.findOne({ nome: nome });
+  console.log('Repository - getCarroByName - Found document:', findResult);
+  return findResult;
+}
+
+async function editCarro(nomeCarro, novasInformacoes) {
+  const updateResult = await carros_collection.updateOne({ nome: nomeCarro }, { $set: novasInformacoes });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+
 
 ///pegar o admin
 async function getAdmin(email, password) {
@@ -138,6 +152,8 @@ exports.deleteCarros = deleteCarros;
 
 exports.getUsers = getUsers;
 exports.getAdmin = getAdmin;
+exports.editCarro = editCarro;
+exports.getCarroByName = getCarroByName;
 exports.getAluguelByUser = getAluguelByUser;
 exports.getAllCarros = getAllCarros;
 exports.compareEmails = compareEmails;

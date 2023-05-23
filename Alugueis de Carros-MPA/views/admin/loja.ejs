@@ -11,8 +11,9 @@
     <header class="header-topo">
         <div class="header-nav">
             <ul>
-                <li><a href="admin/aluguel">admaalugar</a></li>
-                <li><a href="admin/loja">admloja</a></li>
+                <li><a href="aluguel">admaalugar</a></li>
+                <li><a href="/admin/loja">admloja</a></li>
+                <li><button><a href="add-carro">add carro</a></button></li>
             </ul>
         </div>
     </header>
@@ -26,12 +27,12 @@
                 <p>Valor: <%= carros[i].valor %></p>
                 <p>Preço da diária: <%= carros[i].precoDiaria %></p>
                 <p>Status: <%= carros[i].status %></p>
-                <a href="/loja/alugar">Alugar</a>
+                <a href="/deletar-carro">Deletar</a>
+                <a href="/admin/carro-editar/<%= carros[i].nome %>">Editar</a>
             </div>
         <% } %>
     </div>
     
 
-       <a href="add-carro">add carro</a>
 </body>
 </html>
