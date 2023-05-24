@@ -36,7 +36,7 @@
                 <p>Valor: <%= carros[i].valor %></p>
                 <p>Preço da diária: <%= carros[i].precoDiaria %></p>
                 <p>Status: <%= carros[i].status %></p>
-                <a href="/loja/alugar">Alugar</a>
+                <a href="/loja/alugar/<%= carros[i].nome %>">Alugar</a>
             </div>
         <% } %>
     </div>

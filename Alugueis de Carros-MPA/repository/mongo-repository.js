@@ -156,6 +156,14 @@ async function getAllAlugueis() {
   return findResult;
 }
 
+async function saveAluguel(aluguel) {
+  const result = await aluguel_collection.insertOne(aluguel);
+  console.log('Repository - saveAluguel - Inserted aluguel');
+  console.log(result);
+  return result;
+}
+
+
 async function compareEmails(user) {
   const findResult = await user_collection.find({}).toArray();
   console.log('Repository - getAllAlugueis - Found documents =>', findResult);
@@ -184,6 +192,7 @@ exports.getAllAlugueis = getAllAlugueis;
 exports.isEmailAlreadyRegistered = isEmailAlreadyRegistered;
 
 exports.saveCarros = saveCarros;
-exports.saveUser = saveUser;
+exports.saveAluguel = saveAluguel;
+
 
 exports.getUsersFromDB = getUsersFromDB;

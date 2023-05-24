@@ -157,6 +157,35 @@ app.post('/user/signin', async (req, res) => {
   }
 });
 
+app.get('/loja/alugar/:nome', async(req, res) => {
+  console.log("Entrou");
+  const nomeCarro = req.params.nome;
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
+  res.render('loja/alugar', {
+    carros: carro
+  });
+
+})
+
+app.post('/loja/alugar/:nome', async (req, res) => {
+  console.log("req nome admin/edt carro", req.params.nome)
+    const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
+    const carro = await mongoRepository.getCarroByName(nomeCarro);
+    const aluguel = {
+      carro: nomeCarro,
+      dataInicio: req.body.datainicio,
+      dataFim: req.body.dataFim,
+      valorTotal: req.body.valorTotal, // Adicione esta linha para armazenar o valor total
+    };
+    
+
+    await mongoRepository.saveAluguel(aluguel);
+    res.redirect('/loja/alugar/:nome', {
+      carros: carro
+    });
+  
+});
+
 
 /////apg login adm q esqueci q tinha que ser por caminho e n assim
 app.get('/admin/signin', function (req, res) {
@@ -429,7 +458,7 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
     res.redirect('/admin/loja');
   } catch (err) {
     console.error(`Erro ao editar o carro: ${err}`);
-    res.redirect('/admin/loja');
+    res.redirect('/admin/loja');const carro = await mongoRepository.getCarroByName(nomeCarro);
   }
   }else{
     res.redirect('/admin/signin');
