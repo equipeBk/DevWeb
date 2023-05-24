@@ -9,14 +9,15 @@
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div>
-        <nav>
-            <ul>
-                <li> <a href="/aluguel"> Meus Alugueis</a></li>
-                <li> <a href="/loja"> Minha loja</a></li>
-                <li> <a href="/conta"> Minha conta</a></li>
-            </ul>
-        </nav>
+    <div class="grid-item">
+       <img src="<%= aluguel.nameUser %>" alt="carro" width="400px">
+        <h3><%= aluguel.dataInicio %></h3>
+        <p>Marca: <%= aluguel.dataFim %></p>
+        <p>Cor: <%= aluguel.carro.cor %></p>
+        <p>Valor: <%= aluguel.carro.valor %></p>
+        <p>Preço da diária: <%= aluguel.precoDiaria %></p>
+        <p>Status: <%= aluguel.status %></p>
+
     </div>
 </body>
 </html>

@@ -176,6 +176,7 @@ async function compareEmails(user) {
 
 exports.deleteUser = deleteUser;
 exports.deleteCarros = deleteCarros;
+exports.saveUser = saveUser;
 
 exports.getUsers = getUsers;
 exports.getAdmin = getAdmin;
