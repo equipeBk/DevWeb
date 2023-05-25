@@ -45,6 +45,11 @@ async function getCarroByName(nome) {
   return findResult;
 }
 
+async function getAluguelByEmail(email) {
+  const findResult = await aluguel_collection.find({ nomeUser: email }).toArray();
+  console.log('Repository - aluguellle - Found document:', findResult);
+  return findResult;
+}
 
 async function editCarro(nomeCarro, novasInformacoes) {
   const updateResult = await carros_collection.updateOne({ nome: nomeCarro }, { $set: novasInformacoes });
@@ -134,7 +139,7 @@ async function deleteCarros(carros) {
 async function getAluguelByUser(user) {
   console.log('getAluguelByUser - Username param:', user.username)
   
-  const query = { "createdBy.username": user.username };
+  const query = { "nomeUser": user.name};
   const findResult = await aluguel_collection.find(query).toArray();
   console.log('Repository - getAluguelByUser - Found documents =>', findResult);
   return findResult;
@@ -185,6 +190,7 @@ exports.editCarro = editCarro;
 exports.editUser = editUser;
 exports.editUserPass = editUserPass;
 
+exports.getAluguelByEmail = getAluguelByEmail;
 exports.getCarroByName = getCarroByName;
 exports.getAluguelByUser = getAluguelByUser;
 exports.getAllCarros = getAllCarros;

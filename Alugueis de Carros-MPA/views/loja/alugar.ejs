@@ -9,25 +9,26 @@
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div class="grid-item">
-        <img src="<%= carros.imagem %>" alt="carro" width="400px">
-        <h3><%= carros.nome %></h3>
-        <p>Marca: <%= carros.marca %></p>
-        <p>Cor: <%= carros.cor %></p>
-        <p>Valor: <%= carros.valor %></p>
-        <p>Preço da diária: <%= carros.precoDiaria %></p>
-        <p>Status: <%= carros.status %></p>
-    </div>
-
-    <form class="form-container" action="/loja/alugar/<%= carros.nome %>" method="post">
     
-        Início Aluguel: <input type="date" name="datainicio" id="input-inicio" value="<%= carros.inicio %>"> <br>
-        Fim do Aluguel: <input type="date" name="dataFim" id="input-fim" value="<%= carros.dataFim %>"> <br>
-        Valor Total: <span id="valor-total"></span> <br>
-        <input type="hidden" name="valorTotal" id="input-valor-total">
-
-        <input type="submit" value="Salvar"> <br>
-    </form>
+    <div class="grid-container">
+    <div class="grid-item">
+        <form class="form-container" action="/loja/alugar/<%= carros.nome %>" method="post">
+            <img src="<%= carros.imagem %>" alt="carro" width="400px">
+            <h3><%= carros.nome %></h3>
+            <p>Marca: <%= carros.marca %></p>
+            <p>Cor: <%= carros.cor %></p>
+            <p>Valor: <%= carros.valor %></p>
+            <p>Preço da diária: <%= carros.precoDiaria %></p>
+            <p>Status: <%= carros.status %></p>
+            Início Aluguel: <input type="date" name="datainicio" id="input-inicio" value="<%= carros.inicio %>"> <br>
+            Fim do Aluguel: <input type="date" name="dataFim" id="input-fim" value="<%= carros.dataFim %>"> <br>
+            Valor Total: <span id="valor-total"></span> <br>
+            <input type="hidden" name="valorTotal" id="input-valor-total">
+    
+            <input type="submit" value="Salvar"> <br>
+        </form>
+    </div>
+    </div>
 
     <script>
         const inputInicio = document.getElementById('input-inicio');

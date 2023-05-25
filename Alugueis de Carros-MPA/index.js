@@ -157,43 +157,6 @@ app.post('/user/signin', async (req, res) => {
   }
 });
 
-app.get('/loja/alugar/:nome', async (req, res) => {
-  console.log("Entrou");
-  const nomeCarro = req.params.nome;
-  const carro = await mongoRepository.getCarroByName(nomeCarro);
-  res.render('loja/alugar', {
-    carros: carro
-  });
-
-})
-
-app.post('/loja/alugar/:nome', async (req, res) => {
-
-  console.log("req nome admin/edt carro", req.params.nome);
-  const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
-  const carro = await mongoRepository.getCarroByName(nomeCarro);
-  const aluguel = {
-    nomeUser: req.session.user.email,
-    carro: carro,
-    dataInicio: req.body.datainicio,
-    dataFim: req.body.dataFim,
-    valorTotal: req.body.valorTotal,
-  };
-
-  console
-  await mongoRepository.saveAluguel(aluguel);
-  res.redirect('/loja/aluguel');
-});
-
-app.get('/loja/aluguel', async (req, res) => {
-  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  const aluguel = await mongoRepository.getAluguelByUser(req.session.user.email);
-  const carro = await mongoRepository.getAllCarros();
-  res.render('loja/aluguel', {
-    aluguel: aluguel
-  });
-});
-
 /////apg login adm q esqueci q tinha que ser por caminho e n assim
 app.get('/admin/signin', function (req, res) {
   message = req.body.message
@@ -340,18 +303,53 @@ app.post('/loja/senha-editar', async (req, res) => {
 })
 
 
+app.get('/loja/alugar/:nome', async (req, res) => {
+  console.log(req.session.user.email, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log("Entrou");
+  const nomeCarro = req.params.nome;
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
+  res.render('loja/alugar', {
+    carros: carro
+  });
+
+})
+
+app.post('/loja/alugar/:nome', async (req, res) => {
+
+  console.log("req nome admin/edt carro", req.params.nome);
+  const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
+  const aluguel = {
+    nomeUser: req.session.user.email,
+    carro: carro,
+    dataInicio: req.body.datainicio,
+    dataFim: req.body.dataFim,
+    valorTotal: req.body.valorTotal,
+    status:"Aguardando Confirmação"
+  };
+
+  console
+  await mongoRepository.saveAluguel(aluguel);
+  res.redirect('/loja/aluguel');
+});
+
+app.get('/loja/aluguel', async (req, res) => {
+  if (req.session.userAuthenticated) {
+    const aluguel = await mongoRepository.getAluguelByEmail(req.session.user.email);
+    res.render('loja/aluguel', {
+      aluguel: aluguel // Coloque o objeto aluguel em um array
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+
 
 
 ///raiz com lista dos carros
 app.get('/', (req, res) => {
   console.log('GET - index');
-  req.session.user = {
-    name: req.body.name,
-    dataNascimento: req.body.dataNascimento,
-    genero: req.body.genero,
-    telefone: req.body.telefone,
-    email: req.body.email
-  };
 
   mongoRepository.getAllCarros().then((foundCarros) => {
     res.render('index', {
