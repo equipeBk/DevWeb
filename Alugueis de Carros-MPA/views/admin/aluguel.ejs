@@ -32,13 +32,13 @@
             <p>Valor Total: <%= aluguel[i].valorTotal %></p>
             <p>Cliente: <%= aluguel[i].nomeUser %></p>
       
-            <% if (aluguel[i].status != "Confirmado" || aluguel[i].status != "Rejeitado" ) { %>
+            <%if (aluguel[i].status == "Aguardando Confirmação"){ %>
               <form action="/admin/aluguel/<%= aluguel[i]._id %>" method="POST">
                 <input type="hidden" name="_method" value="post">
                 <button type="submit" name="status" value="Confirmado">ACEITAR</button>
                 <button type="submit" name="status" value="Rejeitado">REJEITAR</button>
               </form>
-            <% } %>
+              <% } %>
           </div>
         <% } %>
       </div>
