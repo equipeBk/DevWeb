@@ -315,23 +315,23 @@ app.get('/loja/alugar/:nome', async (req, res) => {
 })
 
 app.post('/loja/alugar/:nome', async (req, res) => {
-
   console.log("req nome admin/edt carro", req.params.nome);
   const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
   const carro = await mongoRepository.getCarroByName(nomeCarro);
+
   const aluguel = {
     nomeUser: req.session.user.email,
     carro: carro,
     dataInicio: req.body.datainicio,
     dataFim: req.body.dataFim,
     valorTotal: req.body.valorTotal,
-    status:"Aguardando Confirmação"
+    formaPagamento: req.body.formaPagamento, 
+    status: "Aguardando Confirmação"
   };
-
-  console
   await mongoRepository.saveAluguel(aluguel);
   res.redirect('/loja/aluguel');
 });
+
 
 app.get('/loja/aluguel', async (req, res) => {
   if (req.session.userAuthenticated) {
