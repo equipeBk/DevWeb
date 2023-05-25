@@ -35,8 +35,8 @@ app.use(
       httpOnly: true,
     },
     store: MongoStore.create({
-      mongoUrl: 'mongodb://root:rootpwd@localhost:27017', // Substitua pelo URL correto do seu banco de dados MongoDB
-      ttl: 24 * 60 * 60, // Tempo de vida da sessão em segundos (aqui, 1 dia)
+      mongoUrl: 'mongodb://root:rootpwd@localhost:27017',
+      ttl: 24 * 60 * 60,
     }),
   })
 );
@@ -45,7 +45,7 @@ app.use(
 
 const adminAuth = basicAuth({
   authorizer: async (email, password, callback) => {
-    const admin = await mongoRepository.getAdmin(email, password); // Apenas busque o administrador pelo e-mail
+    const admin = await mongoRepository.getAdmin(email, password);
     if (!admin || admin.password !== password) {
       return callback(null, false);
     }
@@ -57,7 +57,6 @@ const adminAuth = basicAuth({
 
 const clientAuth = basicAuth({
   authorizer: async (email, password, callback) => {
-    // Buscar os dados do cliente no banco de dados
     const client = await mongoRepository.getUsers(email, password);
 
     if (!client || client.password !== password) {
@@ -70,7 +69,20 @@ const clientAuth = basicAuth({
 });
 
 
-///pagina de criar conta
+
+app.get('/', (req, res) => {
+  console.log('GET - index');
+
+  mongoRepository.getAllCarros().then((foundCarros) => {
+    res.render('index', {
+      carros: foundCarros,
+      user: req.session.user
+    });
+  });
+});
+
+
+
 app.get('/signup', function (req, res) {
   message = req.body.message
   res.render('user/signup.ejs');
@@ -90,7 +102,7 @@ app.post('/signup', async (req, res) => {
         console.log('Inserted User')
         console.log(insertedUser)
         console.log(email)
-        ////enviar email de confirmação
+
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
@@ -121,7 +133,6 @@ app.post('/signup', async (req, res) => {
 
 });
 
-////pagina de login user
 app.get('/signin', function (req, res) {
   message = req.body.message
   res.render('user/signin.ejs');
@@ -129,7 +140,6 @@ app.get('/signin', function (req, res) {
 });
 
 
-////fazendo login do user porem...
 app.post('/signin', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -157,15 +167,12 @@ app.post('/signin', async (req, res) => {
   }
 });
 
-/////apg login adm q esqueci q tinha que ser por caminho e n assim
 app.get('/admin/signin', function (req, res) {
   message = req.body.message
   res.render('admin/signin.ejs');
   console.log(" app.get admin/signin")
 });
 
-////loginadmin
-// Rota de login para o administrador
 app.post('/admin/signin', async (req, res) => {
   console.log("/admin/signin auth", req.session.adminAuthenticated);
   const email = req.body.email;
@@ -177,10 +184,10 @@ app.post('/admin/signin', async (req, res) => {
     req.session.user = {
       email: req.body.email
     };
-    req.session.adminAuthenticated = true; // Correção: definir a sessão do admin como autenticada
+    req.session.adminAuthenticated = true; 
     console.log("admin existe", admin);
     console.log("adm auth", req.session.adminAuthenticated);
-    res.redirect('/admin/loja'); // Correção: redirecionar após definir a sessão
+    res.redirect('/admin/loja'); 
   } else {
     console.log("admin não existe");
     res.render('admin/signin.ejs', {
@@ -231,7 +238,7 @@ app.post('/loja/conta-editar', async (req, res) => {
   message = req.body.message
   if (req.session.userAuthenticated) {
     try {
-      let emailUser = req.session.user.email; // Obtém o email do user 
+      let emailUser = req.session.user.email; 
       const novasInformacoes = {
         name: req.body.name,
         dataNascimento: req.body.dataNascimento,
@@ -279,7 +286,7 @@ app.post('/loja/senha-editar', async (req, res) => {
   if (req.session.userAuthenticated) {
     try {
       if (oldpassword === req.session.user.password) {
-        let emailUser = req.session.user.email; // Obtém o email do user 
+        let emailUser = req.session.user.email;
         const novasInformacoes = {
           password: req.body.password
         };
@@ -304,18 +311,22 @@ app.post('/loja/senha-editar', async (req, res) => {
 
 
 app.get('/loja/alugar/:nome', async (req, res) => {
-  console.log(req.session.user.email, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  if (req.session.userAuthenticated) {
+  console.log(req.session.user.email, "app.get('/loja/alugar/:nome'")
   console.log("Entrou");
   const nomeCarro = req.params.nome;
   const carro = await mongoRepository.getCarroByName(nomeCarro);
   res.render('loja/alugar', {
     carros: carro
   });
+} else {
+  res.redirect('/signin');
+}
 
 })
 
 app.post('/loja/alugar/:nome', async (req, res) => {
-
+  if (req.session.userAuthenticated) {
   console.log("req nome admin/edt carro", req.params.nome);
   const nomeCarro = req.params.nome; 
   const carro = await mongoRepository.getCarroByName(nomeCarro);
@@ -332,6 +343,9 @@ app.post('/loja/alugar/:nome', async (req, res) => {
   console
   await mongoRepository.saveAluguel(aluguel);
   res.redirect('/loja/aluguel');
+} else {
+  res.redirect('/signin');
+}
 });
 
 app.get('/loja/aluguel', async (req, res) => {
@@ -382,23 +396,6 @@ app.post('/admin/aluguel/:id', async (req, res) => {
     res.redirect('/admin/signin');
   }
 });
-
-
-
-
-
-///raiz com lista dos carros
-app.get('/', (req, res) => {
-  console.log('GET - index');
-
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('index', {
-      carros: foundCarros,
-      user: req.session.user // Passa o objeto `user` para o template
-    });
-  });
-});
-
 
 ///loja admin
 app.get('/admin/loja', function (req, res) {
@@ -491,7 +488,7 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
   console.log("req nome admin/edt carro", req.params.nome)
   if (req.session.adminAuthenticated) {
     try {
-      const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
+      const nomeCarro = req.params.nome; 
       const novasInformacoes = {
         imagem: req.body.imagem,
         marca: req.body.marca,
@@ -516,8 +513,8 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
 
 ///buscar carros
 app.post('/busca', (req, res) => {
-  const nome = req.body.busca.toLowerCase(); // converte o nome para minúsculo
-  const marca = req.body.busca.toLowerCase(); // converte a marca para minúsculo
+  const nome = req.body.busca.toLowerCase(); 
+  const marca = req.body.busca.toLowerCase(); 
 
   mongoRepository.getAllCarros()
     .then(carros => {
@@ -543,7 +540,7 @@ app.get('/logout', (req, res) => {
       console.error('Erro ao destruir a sessão:', err);
       res.sendStatus(500);
     } else {
-      res.redirect('/'); // Redireciona para a página inicial ou qualquer outra página desejada após o logout
+      res.redirect('/'); 
     }
   });
 });
