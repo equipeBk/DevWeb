@@ -212,7 +212,7 @@ app.get('/loja', (req, res) => {
 
 })
 app.get('/loja/conta', async (req, res) => {
-  console.log('loja conta edit', req.session.user)
+  console.log('loja conta edit loja/conta get', req.session.user)
   if (req.session.userAuthenticated) {
     res.render('loja/conta', {
       user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
@@ -224,7 +224,7 @@ app.get('/loja/conta', async (req, res) => {
 
 app.get('/loja/conta-editar', async (req, res) => {
   message = req.body.message
-  console.log('loja conta edit', req.session.user)
+  console.log('loja conta edit app.get', req.session.user)
   if (req.session.userAuthenticated) {
     res.render('loja/conta-editar', {
       user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
@@ -235,6 +235,7 @@ app.get('/loja/conta-editar', async (req, res) => {
 });
 
 app.post('/loja/conta-editar', async (req, res) => {
+  console.log('loja conta edit app.get', req.session.user)
   message = req.body.message
   if (req.session.userAuthenticated) {
     try {
@@ -245,10 +246,9 @@ app.post('/loja/conta-editar', async (req, res) => {
         genero: req.body.genero,
         telefone: req.body.telefone,
         email: req.body.email,
-        password: req.session.user.password
       };
 
-      console.log("emaiol user", emailUser)
+      console.log("email user", emailUser)
 
 
       await mongoRepository.editUser(emailUser, novasInformacoes);
