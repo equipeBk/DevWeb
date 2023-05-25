@@ -1,8 +1,10 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const basicAuth = require('express-basic-auth');
 const nodemailer = require('nodemailer');
 var CookieSession = require('cookie-session');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const router = express.Router();
 module.exports = router;
 const app = express()
@@ -20,29 +22,38 @@ app.use(express.urlencoded({
 
 const mongoRepository = require('./repository/mongo-repository')
 
-// Configurar o armazenamento da sessão (exemplo usando a memória)
-app.use(session({
-  secret: 'seuSegredoAqui',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(cookieParser());
+
+app.use(
+  session({
+    secret: 'docedebananaébom',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: false,
+      httpOnly: true,
+    },
+    store: MongoStore.create({
+      mongoUrl: 'mongodb://root:rootpwd@localhost:27017', // Substitua pelo URL correto do seu banco de dados MongoDB
+      ttl: 24 * 60 * 60, // Tempo de vida da sessão em segundos (aqui, 1 dia)
+    }),
+  })
+);
+
+
 
 const adminAuth = basicAuth({
   authorizer: async (email, password, callback) => {
-    // Buscar os dados do administrador no banco de dados
-    const admin = await mongoRepository.getAdmin(email, password);
-    console.log("adminAuth = basicAuth({ existe")
+    const admin = await mongoRepository.getAdmin(email, password); // Apenas busque o administrador pelo e-mail
     if (!admin || admin.password !== password) {
-      console.log("    if (!admin || admin.password !== password) {");
       return callback(null, false);
-
     }
-    console.log(" naõ rolou")
     callback(null, true);
-
   },
   unauthorizedResponse: 'Acesso não autorizado como administrador'
 });
+
 
 const clientAuth = basicAuth({
   authorizer: async (email, password, callback) => {
@@ -57,26 +68,6 @@ const clientAuth = basicAuth({
   },
   unauthorizedResponse: 'Acesso não autorizado como cliente'
 });
-
-
-///raiz com lista dos carros
-app.get('/', (req, res) => {
-  console.log('GET - index')
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('index', {
-      carros: foundCarros
-    })
-  })
-})
-
-app.get('/loja', (req, res) => {
-  console.log('GET - index')
-  mongoRepository.getAllCarros().then((foundCarros) => {
-    res.render('loja/loja', {
-      carros: foundCarros
-    })
-  })
-})
 
 
 ///pagina de criar conta
@@ -120,7 +111,7 @@ app.post('/user/signup', async (req, res) => {
             console.log('Email enviado: ' + info.response);
           }
         });
-        res.redirect('/')
+        res.redirect('/loja')
       })
     }
   } catch (err) {
@@ -145,14 +136,21 @@ app.post('/user/signin', async (req, res) => {
 
   const user = await mongoRepository.getUsers(email, password);
 
-  if (user.length != 0) {
-    req.session.userAuthenticated == true;
-    console.log("usuario existe", user)
-    const token = "adasadsadasdadadsadad";
-    res.cookie('token', token);
-    res.redirect('/loja/loja'); ///tem que dar um jeito de ser a loja do index, mas como lá sem autenticação n pode mostrar alugar, eu n sei oq fazer
+  if (user.length !== 0) {
+    req.session.user = {
+      name: req.body.name,
+      dataNascimento: req.body.dataNascimento,
+      genero: req.body.genero,
+      telefone: req.body.telefone,
+      email: req.body.email,
+      password: req.body.password
+    };
+    console.log(req.session.user)
+    req.session.userAuthenticated = true;
+    console.log("Usuário existe:", user);
+    res.redirect('/loja');
   } else {
-    console.log("usuario não existe")
+    console.log("Usuário não existe");
     res.render('user/signin.ejs', {
       message: 'Email ou senha incorretos'
     });
@@ -169,44 +167,243 @@ app.get('/admin/signin', function (req, res) {
 ////loginadmin
 // Rota de login para o administrador
 app.post('/admin/signin', async (req, res) => {
+  console.log("/admin/signin auth", req.session.adminAuthenticated);
   const email = req.body.email;
   const password = req.body.password;
 
   const admin = await mongoRepository.getAdmin(email, password);
 
   if (admin.length !== 0) {
-    req.session.adminAuthenticated = true; // Define a sessão do admin como autenticada
-    console.log("admin existe", admin)
-    console.log("adm auth", req.session.adminAuthenticated)
-    const token = "adaadgdgfgfgfd";
-    res.cookie('token', token)
-    res.redirect('/admin/loja');
+    req.session.user = {
+      email: req.body.email
+    };
+    req.session.adminAuthenticated = true; // Correção: definir a sessão do admin como autenticada
+    console.log("admin existe", admin);
+    console.log("adm auth", req.session.adminAuthenticated);
+    res.redirect('/admin/loja'); // Correção: redirecionar após definir a sessão
   } else {
-    console.log("admin não existe")
+    console.log("admin não existe");
     res.render('admin/signin.ejs', {
       message: 'Email ou senha incorretos'
     });
   }
 });
 
-////loja 
-app.get('/loja/loja', clientAuth, function (req, res) {
-  if (req.session.userAuthenticated === true) {
+app.get('/loja', (req, res) => {
+  if (req.session.userAuthenticated) {
+
+    console.log('GET - index')
     mongoRepository.getAllCarros().then((foundCarros) => {
-      res.render('loja/loja.ejs', {
+      res.render('loja/loja', {
         carros: foundCarros,
+        user: req.session.user
       })
-      console.log("get /loja/loja")
     })
   } else {
     res.redirect('/user/signin');
   }
 
+})
+app.get('/loja/conta', async (req, res) => {
+  console.log('loja conta edit', req.session.user)
+  if (req.session.userAuthenticated) {
+    res.render('loja/conta', {
+      user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
 });
 
+app.get('/loja/conta-editar', async (req, res) => {
+  message = req.body.message
+  console.log('loja conta edit', req.session.user)
+  if (req.session.userAuthenticated) {
+    res.render('loja/conta-editar', {
+      user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.post('/loja/conta-editar', async (req, res) => {
+  message = req.body.message
+  if (req.session.userAuthenticated) {
+    try {
+      let emailUser = req.session.user.email; // Obtém o email do user 
+      const novasInformacoes = {
+        name: req.body.name,
+        dataNascimento: req.body.dataNascimento,
+        genero: req.body.genero,
+        telefone: req.body.telefone,
+        email: req.body.email,
+        password: req.session.user.password
+      };
+
+      console.log("emaiol user", emailUser)
+
+
+      await mongoRepository.editUser(emailUser, novasInformacoes);
+      req.session.user = {
+        name: req.body.name,
+        dataNascimento: req.body.dataNascimento,
+        genero: req.body.genero,
+        telefone: req.body.telefone,
+        email: req.body.email,
+        password: req.session.user.password
+      };
+      console.log("await mongoRepository.editUser(emailUser, novasInformacoes);", await mongoRepository.editUser(emailUser, novasInformacoes))
+      res.redirect('/loja/conta');
+    } catch (err) {
+      console.error(`Erro ao editar o user: ${err}`);
+      res.redirect('/loja/conta');
+    }
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.get('/loja/senha-editar', (req, res) => {
+  message = req.body.message
+  if (req.session.userAuthenticated) {
+    res.render('loja/senha-editar.ejs');
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.post('/loja/senha-editar', async (req, res) => {
+  message = req.body.message
+  let oldpassword = req.body.oldpassword;
+  if (req.session.userAuthenticated) {
+    try {
+      if (oldpassword === req.session.user.password) {
+        let emailUser = req.session.user.email; // Obtém o email do user 
+        const novasInformacoes = {
+          password: req.body.password
+        };
+
+        console.log("emaiol user", emailUser)
+
+
+        await mongoRepository.editUserPass(emailUser, novasInformacoes);
+        req.session.user.password = req.body.password;
+        console.log("await mongoRepository.editUser(emailUser, novasInformacoes);", password)
+        res.render('/loja');
+      }
+
+    } catch (err) {
+      console.error(`Erro ao editar o user: ${err}`);
+      res.redirect('/loja/conta');
+    }
+  } else {
+    res.redirect('/user/signin');
+  }
+})
+
+
+app.get('/loja/alugar/:nome', async (req, res) => {
+  console.log(req.session.user.email, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+  console.log("Entrou");
+  const nomeCarro = req.params.nome;
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
+  res.render('loja/alugar', {
+    carros: carro
+  });
+
+})
+
+app.post('/loja/alugar/:nome', async (req, res) => {
+
+  console.log("req nome admin/edt carro", req.params.nome);
+  const nomeCarro = req.params.nome; 
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
+  const aluguel = {
+    nomeUser: req.session.user.email,
+    carro: carro,
+    dataInicio: req.body.datainicio,
+    dataFim: req.body.dataFim,
+    valorTotal: req.body.valorTotal,
+    status:"Aguardando Confirmação"
+  };
+
+  console
+  await mongoRepository.saveAluguel(aluguel);
+  res.redirect('/loja/aluguel');
+});
+
+app.get('/loja/aluguel', async (req, res) => {
+  if (req.session.userAuthenticated) {
+    const aluguel = await mongoRepository.getAluguelByEmail(req.session.user.email);
+    res.render('loja/aluguel', {
+      aluguel: aluguel 
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+app.get('/admin/aluguel', async (req, res) => {
+  console.log("admin aluguel get")
+  if (req.session.adminAuthenticated) {
+    const aluguel = await mongoRepository.getAllAlugueis();
+    res.render('loja/aluguel', {
+      aluguel: aluguel 
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+const { ObjectId } = require('mongodb');
+
+app.post('/admin/aluguel/:id', async (req, res) => {
+  console.log("admin aluguel post");
+  if (req.session.adminAuthenticated) {
+    try {
+      const idAluguel = req.params.id;
+      const status = req.body.status ; 
+      
+      const objectId = new ObjectId(idAluguel);
+      await mongoRepository.editAluguel(objectId, status); 
+      const aluguel = await mongoRepository.getAllAlugueis();
+      console.log("admin aluguel post", objectId);
+      console.log("admin aluguel post", status);
+  
+      console.log("admin aluguel post", await mongoRepository.editAluguel(objectId, status));
+      res.redirect('/admin/aluguel');
+    } catch (err) {
+      console.error(`Erro ao editar o aluguel: ${err}`);
+      res.redirect('/admin/aluguel');
+    }
+  } else {
+    res.redirect('/admin/signin');
+  }
+});
+
+
+
+
+
+///raiz com lista dos carros
+app.get('/', (req, res) => {
+  console.log('GET - index');
+
+  mongoRepository.getAllCarros().then((foundCarros) => {
+    res.render('index', {
+      carros: foundCarros,
+      user: req.session.user // Passa o objeto `user` para o template
+    });
+  });
+});
+
+
 ///loja admin
-app.get('/admin/loja', adminAuth, function (req, res) {
-  if (req.session.adminAuthenticated === true) {
+app.get('/admin/loja', function (req, res) {
+  console.log("/admin/loja auth", req.session.adminAuthenticated);
+  const user = req.session.user;
+  if (req.session.adminAuthenticated) {
     mongoRepository.getAllCarros().then((foundCarros) => {
       res.render('admin/loja.ejs', {
         carros: foundCarros,
@@ -217,75 +414,102 @@ app.get('/admin/loja', adminAuth, function (req, res) {
     res.redirect('/admin/signin');
   }
 });
-////adicionar carro
-app.get('/admin/add-carro', adminAuth, function (req, res) {
-  res.render('admin/add-carro.ejs');
-  console.log(" admin/add-carro")
+
+app.get('/admin/add-carro', function (req, res) {
+  if (req.session.adminAuthenticated) {
+    res.render('admin/add-carro.ejs');
+    console.log(" admin/add-carro")
+  } else {
+    res.redirect('/admin/signin');
+  }
+
 });
 
-app.post('/add-carro', adminAuth, (req, res) => {
+app.post('/add-carro', (req, res) => {
+  console.log("/admin/loja auth", req.session.adminAuthenticated);
   console.log('POST - /admin/add-carro')
+  const user = req.session.user;
   let newCarro = req.body;
-  newCarro.createdBy = req.body.admin;
+  newCarro.createdBy = user;
   console.log(newCarro)
-  mongoRepository.saveCarros(req.body).then((insertedCarro) => {
-    console.log('Inserted Carro')
-    console.log(insertedCarro)
-    res.redirect('admin/loja')
-  })
+  if (req.session.adminAuthenticated) {
+    mongoRepository.saveCarros(req.body).then((insertedCarro) => {
+      console.log('Inserted Carro')
+      console.log(insertedCarro)
+      res.redirect('admin/loja')
+    })
+  } else {
+    res.redirect('/admin/signin');
+  }
+
 })
 
 ///deletar carro
-app.get('/deletar-carro', adminAuth, (req, res) => {
-  let deleteCarros = req._id
-  console.error(deleteCarros);
-  mongoRepository.deleteCarros(deleteCarros)
-    .then(() => {
-      console.log(`Categoria com id ${deleteCarros} excluída com sucesso`)
-      res.redirect('admin/loja')
-    })
+app.get('/deletar-carro', (req, res) => {
+  if (req.session.adminAuthenticated) {
+    let deleteCarros = req._id
+    console.error(deleteCarros);
+    mongoRepository.deleteCarros(deleteCarros)
+      .then(() => {
+        console.log(`Categoria com id ${deleteCarros} excluída com sucesso`)
+        res.redirect('admin/loja')
+      })
+  } else {
+    res.redirect('/admin/signin');
+  }
+
 })
 
 // Editar carro
-app.get('/admin/carro-editar/:nome', adminAuth, async (req, res) => {
+app.get('/admin/carro-editar/:nome', async (req, res) => {
   const nomeCarro = req.params.nome;
-  console.log("req AAAAAAAAnome admin/edt carro", nomeCarro);
-  try {
-    const carro = await mongoRepository.getCarroByName(nomeCarro);
-    if (!carro) {
-      console.error('Carro não encontrado');
+  if (req.session.adminAuthenticated) {
+    console.log("req AAAAAAAAnome admin/edt carro", nomeCarro);
+    try {
+      const carro = await mongoRepository.getCarroByName(nomeCarro);
+      if (!carro) {
+        console.error('Carro não encontrado');
+        res.redirect('/admin/loja');
+        return;
+      }
+      res.render('admin/carro-editar', {
+        carros: carro
+      });
+    } catch (err) {
+      console.error(`Erro ao obter informações do carro: ${err}`);
       res.redirect('/admin/loja');
-      return;
     }
-    res.render('admin/carro-editar', {
-      carros: carro
-    });
-  } catch (err) {
-    console.error(`Erro ao obter informações do carro: ${err}`);
-    res.redirect('/admin/loja');
+  } else {
+    res.redirect('/admin/signin');
   }
 });
 
 
 // Editar carro por nome
-app.post('/admin/editar-carro/:nome', adminAuth, async (req, res) => {
+app.post('/admin/editar-carro/:nome', async (req, res) => {
   console.log("req nome admin/edt carro", req.params.nome)
-  try {
-    const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
-    const novasInformacoes = {
-      imagem: req.body.imagem,
-      marca: req.body.marca,
-      cor: req.body.cor,
-      valor: req.body.valor,
-      precoDiaria: req.body.precoDiaria,
-    };
+  if (req.session.adminAuthenticated) {
+    try {
+      const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
+      const novasInformacoes = {
+        imagem: req.body.imagem,
+        marca: req.body.marca,
+        cor: req.body.cor,
+        valor: req.body.valor,
+        precoDiaria: req.body.precoDiaria,
+      };
 
-    await mongoRepository.editCarro(nomeCarro, novasInformacoes);
-    res.redirect('/admin/loja');
-  } catch (err) {
-    console.error(`Erro ao editar o carro: ${err}`);
-    res.redirect('/admin/loja');
+      await mongoRepository.editCarro(nomeCarro, novasInformacoes);
+      res.redirect('/admin/loja');
+    } catch (err) {
+      console.error(`Erro ao editar o carro: ${err}`);
+      res.redirect('/admin/loja');
+      const carro = await mongoRepository.getCarroByName(nomeCarro);
+    }
+  } else {
+    res.redirect('/admin/signin');
   }
+
 });
 
 
@@ -297,7 +521,7 @@ app.post('/busca', (req, res) => {
   mongoRepository.getAllCarros()
     .then(carros => {
       const carrosEncontrados = carros.filter(carro =>
-        carro.nome.toLowerCase().includes(nome) &&
+        carro.nome.toLowerCase().includes(nome) ||
         carro.marca.toLowerCase().includes(marca)
       );
 
@@ -312,7 +536,18 @@ app.post('/busca', (req, res) => {
 });
 
 
-////////testeeeeee///////
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('Erro ao destruir a sessão:', err);
+      res.sendStatus(500);
+    } else {
+      res.redirect('/'); // Redireciona para a página inicial ou qualquer outra página desejada após o logout
+    }
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

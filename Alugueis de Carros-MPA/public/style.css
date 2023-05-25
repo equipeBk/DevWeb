@@ -1,4 +1,4 @@
-/* Estilos para o cabeçalho */
+
 .header-topo {
   position: fixed;
   top: 0;
@@ -27,14 +27,12 @@
   margin-right: 0;
 }
 
-/* Estilos para a grade de itens */
 .grid-container {
   margin-top: 40px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Define 3 colunas com largura igual */
-  grid-gap: 10px; /* Define o espaçamento entre os itens */
+  grid-template-columns: repeat(3, 1fr); 
+  grid-gap: 10px; 
 }
-
 .grid-item {
   background-color: #f1f1f1;
   padding: 20px;

@@ -9,16 +9,46 @@
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <header class="header-topo">
-        <div class="header-nav">
-            <ul>
-                <li><a href="user/signin">Login</a></li>
-                <li><a href="user/signup">Cadastro</a></li>
-                <li><a href="admin/add-carro">admaddcarro</a></li>
-                <li><a href="admin/loja">admloja</a></li>
-                <li><a href="admin/signin">admlogin</a></li>
-            </ul>
-        </div>
-    </header>
+    
+    <div class="grid-container">
+    <div class="grid-item">
+        <form class="form-container" action="/loja/alugar/<%= carros.nome %>" method="post">
+            <img src="<%= carros.imagem %>" alt="carro" width="400px">
+            <h3><%= carros.nome %></h3>
+            <p>Marca: <%= carros.marca %></p>
+            <p>Cor: <%= carros.cor %></p>
+            <p>Valor: <%= carros.valor %></p>
+            <p>Preço da diária: <%= carros.precoDiaria %></p>
+            <p>Status: <%= carros.status %></p>
+            Início Aluguel: <input type="date" name="datainicio" id="input-inicio" value="<%= carros.inicio %>"> <br>
+            Fim do Aluguel: <input type="date" name="dataFim" id="input-fim" value="<%= carros.dataFim %>"> <br>
+            Valor Total: <span id="valor-total"></span> <br>
+            <input type="hidden" name="valorTotal" id="input-valor-total">
+    
+            <input type="submit" value="Salvar"> <br>
+        </form>
+    </div>
+    </div>
+
+    <script>
+        const inputInicio = document.getElementById('input-inicio');
+        const inputFim = document.getElementById('input-fim');
+        const valorTotal = document.getElementById('valor-total');
+        const precoDiaria = <%= carros.precoDiaria %>;
+
+        function calcularDiarias() {
+            const inicio = new Date(inputInicio.value);
+            const fim = new Date(inputFim.value);
+            const diffTime = Math.abs(fim - inicio);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const valorCalculado = diffDays * precoDiaria;
+            valorTotal.textContent = `R$ ${valorCalculado.toFixed(2)}`;
+            const inputValorTotal = document.getElementById('input-valor-total');
+            inputValorTotal.value = valorCalculado.toFixed(2); // Atualiza o valor do input oculto
+        }
+
+        inputInicio.addEventListener('input', calcularDiarias);
+        inputFim.addEventListener('input', calcularDiarias);
+    </script>
 </body>
 </html>

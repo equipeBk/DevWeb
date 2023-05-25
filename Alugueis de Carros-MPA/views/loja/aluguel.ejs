@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,15 +9,43 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
 </head>
+
 <body>
-    <div>
-        <nav>
+    <div class="header-topo">
+        <nav class="header-nav">
             <ul>
-                <li> <a href="/aluguel"> Meus Alugueis</a></li>
+                <li> <a href="/loja/aluguel"> Meus Alugueis</a></li>
                 <li> <a href="/loja"> Minha loja</a></li>
-                <li> <a href="/conta"> Minha conta</a></li>
+                <li> <a href="/loja/conta"> Minha conta</a></li>
             </ul>
         </nav>
-    </div>
+        <div class="grid-container">
+            <% for (let i = 0; i < aluguel.length; i++) { %>
+              <div class="grid-item">
+                <img src="<%= aluguel[i].carro.imagem %>" alt="carro" width="400px">
+                <p>Cor: <%= aluguel[i].carro.cor %></p>
+                <p>Valor: <%= aluguel[i].carro.valor %></p>
+                <p>Preço da diária: <%= aluguel[i].carro.precoDiaria %></p>
+                <p>Status: <%= aluguel[i].status %></p>
+                <p>Data de Início: <%= aluguel[i].dataInicio %></p>
+                <p>Data de Fim: <%= aluguel[i].dataFim %></p>
+                <p>Valor Total: <%= aluguel[i].valorTotal %></p>
+                <p>Cliente: <%= aluguel[i].nomeUser %></p>
+          
+                <form action="/admin/aluguel/<%= aluguel[i]._id %>" method="POST">
+                    <input type="hidden" name="status" value="Confirmado">
+                    <button type="submit">ACEITAR</button>
+                  </form>
+                  <form action="/admin/aluguel/<%= aluguel[i]._id %>" method="POST">
+                    <input type="hidden" name="status" value="Rejeitado">
+                    <button type="submit">REJEITAR</button>
+                  </form>
+                  
+              </div>
+            <% } %>
+          </div>
+          
+
 </body>
+
 </html>

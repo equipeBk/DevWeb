@@ -12,6 +12,8 @@ var carros_collection;
 var admin_collection;
 var aluguel_collection;
 
+const { ObjectId } = require('mongodb');
+
 async function main() {
   // Use connect method to connect to the server
   await client.connect();
@@ -45,13 +47,44 @@ async function getCarroByName(nome) {
   return findResult;
 }
 
+async function getAluguelByEmail(email) {
+  const findResult = await aluguel_collection.find({ nomeUser: email }).toArray();
+  console.log('Repository - aluguellle - Found document:', findResult);
+  return findResult;
+}
+
 async function editCarro(nomeCarro, novasInformacoes) {
   const updateResult = await carros_collection.updateOne({ nome: nomeCarro }, { $set: novasInformacoes });
   console.log('Repository - editCarro - Updated document:', updateResult);
   return updateResult;
 }
 
+async function editAluguel(idAluguel, novasInformacoes) {
+  const objectId = new ObjectId(idAluguel);
+  const updateResult = await carros_collection.updateOne({ _id: objectId }, { $set: novasInformacoes });
+  console.log('Repository - editAluguel - Updated document:', updateResult);
+  return updateResult;
+}
 
+
+async function editUser(password, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ password: password }, { $set: novasInformacoes });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+async function editUserPass(emailUser, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ email: emailUser }, { $set: novasInformacoes });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+
+async function editUserPass(emailUser, novasInformacoes) {
+  const updateResult = await user_collection.updateOne({ email: emailUser }, {$set: novasInformacoes  });
+  console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
 
 ///pegar o admin
 async function getAdmin(email, password) {
@@ -115,7 +148,7 @@ async function deleteCarros(carros) {
 async function getAluguelByUser(user) {
   console.log('getAluguelByUser - Username param:', user.username)
   
-  const query = { "createdBy.username": user.username };
+  const query = { "nomeUser": user.name};
   const findResult = await aluguel_collection.find(query).toArray();
   console.log('Repository - getAluguelByUser - Found documents =>', findResult);
   return findResult;
@@ -137,6 +170,14 @@ async function getAllAlugueis() {
   return findResult;
 }
 
+async function saveAluguel(aluguel) {
+  const result = await aluguel_collection.insertOne(aluguel);
+  console.log('Repository - saveAluguel - Inserted aluguel');
+  console.log(result);
+  return result;
+}
+
+
 async function compareEmails(user) {
   const findResult = await user_collection.find({}).toArray();
   console.log('Repository - getAllAlugueis - Found documents =>', findResult);
@@ -149,10 +190,17 @@ async function compareEmails(user) {
 
 exports.deleteUser = deleteUser;
 exports.deleteCarros = deleteCarros;
+exports.saveUser = saveUser;
 
 exports.getUsers = getUsers;
 exports.getAdmin = getAdmin;
+
 exports.editCarro = editCarro;
+exports.editUser = editUser;
+exports.editUserPass = editUserPass;
+exports.editAluguel = editAluguel;
+
+exports.getAluguelByEmail = getAluguelByEmail;
 exports.getCarroByName = getCarroByName;
 exports.getAluguelByUser = getAluguelByUser;
 exports.getAllCarros = getAllCarros;
@@ -161,6 +209,7 @@ exports.getAllAlugueis = getAllAlugueis;
 exports.isEmailAlreadyRegistered = isEmailAlreadyRegistered;
 
 exports.saveCarros = saveCarros;
-exports.saveUser = saveUser;
+exports.saveAluguel = saveAluguel;
+
 
 exports.getUsersFromDB = getUsersFromDB;

@@ -13,7 +13,6 @@
             if (input.value !== document.getElementById('password').value) {
                 input.setCustomValidity('Passwords must match');
             } else {
-                // input is valid -- reset the error message
                 input.setCustomValidity('');
             }
         }
@@ -23,7 +22,7 @@
 <body>
 
         <form class="form-container" action="/user/signup" method="post">
-
+            <h5>CADASTRO USUARIO</h5>
             Name: <input type="text" name="name"  required/><br />
             Data de nascimento: <input type="date" name="dataNascimento"  required/><br />
             Genero: <select name="genero"  required> <br>
