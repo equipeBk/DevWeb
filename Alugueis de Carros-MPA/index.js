@@ -6,6 +6,10 @@ var CookieSession = require('cookie-session');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const router = express.Router();
+const { ObjectId } = require('mongodb');
+
+// Rest of your code
+
 module.exports = router;
 const app = express()
 const port = 3000
@@ -371,23 +375,24 @@ app.get('/admin/aluguel', async (req, res) => {
   }
 });
 
-const { ObjectId } = require('mongodb');
-
 app.post('/admin/aluguel/:id', async (req, res) => {
   console.log("admin aluguel post");
   if (req.session.adminAuthenticated) {
     try {
-      const idAluguel = req.params.id;
-      const status = req.body.status ; 
-      
-      const objectId = new ObjectId(idAluguel);
-      await mongoRepository.editAluguel(objectId, status); 
-      const aluguel = await mongoRepository.getAllAlugueis();
-      console.log("admin aluguel post", objectId);
+      const idAluguel =  req.params.id;
+      const status = req.body.status;
+
+      const novoAluguel = {
+        status: req.body.status
+      };
+     console.log("admin aluguel post", idAluguel);
       console.log("admin aluguel post", status);
+     
+      const aluguel = await mongoRepository.getAllAlugueis();
+     await mongoRepository.editAluguel(idAluguel, novoAluguel);
   
-      console.log("admin aluguel post", await mongoRepository.editAluguel(objectId, status));
-      res.redirect('/admin/aluguel');
+      console.log("admin aluguel post", await mongoRepository.editAluguel(idAluguel, novoAluguel));
+      res.rendirect('admin/aluguel')
     } catch (err) {
       console.error(`Erro ao editar o aluguel: ${err}`);
       res.redirect('/admin/aluguel');
@@ -396,6 +401,7 @@ app.post('/admin/aluguel/:id', async (req, res) => {
     res.redirect('/admin/signin');
   }
 });
+
 
 ///loja admin
 app.get('/admin/loja', function (req, res) {
