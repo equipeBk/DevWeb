@@ -1,4 +1,8 @@
 const { MongoClient } = require('mongodb');
+const { ObjectId } = require('mongodb');
+
+// Rest of your code
+
 
 // Connection URL
 const url = 'mongodb://root:rootpwd@localhost:27017';
@@ -11,8 +15,6 @@ var user_collection;
 var carros_collection;
 var admin_collection;
 var aluguel_collection;
-
-const { ObjectId } = require('mongodb');
 
 async function main() {
   // Use connect method to connect to the server
@@ -49,7 +51,7 @@ async function getCarroByName(nome) {
 
 async function getAluguelByEmail(email) {
   const findResult = await aluguel_collection.find({ nomeUser: email }).toArray();
-  console.log('Repository - aluguellle - Found document:', findResult);
+  console.log('Repository - getAluguelByEmail - Found document:', findResult);
   return findResult;
 }
 
@@ -60,36 +62,30 @@ async function editCarro(nomeCarro, novasInformacoes) {
 }
 
 async function editAluguel(idAluguel, novasInformacoes) {
-  const objectId = new ObjectId(idAluguel);
-  const updateResult = await carros_collection.updateOne({ _id: objectId }, { $set: novasInformacoes });
+  const filter = { _id: new ObjectId(idAluguel) };
+  const update = { $set: novasInformacoes };
+  const updateResult = await aluguel_collection.updateOne(filter, update);
   console.log('Repository - editAluguel - Updated document:', updateResult);
   return updateResult;
 }
 
-
-async function editUser(password, novasInformacoes) {
+async function editUserPass(password, novasInformacoes) {
   const updateResult = await user_collection.updateOne({ password: password }, { $set: novasInformacoes });
-  console.log('Repository - editCarro - Updated document:', updateResult);
-  return updateResult;
-}
-
-async function editUserPass(emailUser, novasInformacoes) {
-  const updateResult = await user_collection.updateOne({ email: emailUser }, { $set: novasInformacoes });
-  console.log('Repository - editCarro - Updated document:', updateResult);
+  console.log('Repository - editUserPass - Updated document:', updateResult);
   return updateResult;
 }
 
 
-async function editUserPass(emailUser, novasInformacoes) {
+async function editUser(emailUser, novasInformacoes) {
   const updateResult = await user_collection.updateOne({ email: emailUser }, {$set: novasInformacoes  });
-  console.log('Repository - editCarro - Updated document:', updateResult);
+  console.log('Repository - editUserPass - Updated document:', updateResult);
   return updateResult;
 }
 
 ///pegar o admin
 async function getAdmin(email, password) {
   const findResult = await admin_collection.find({email: email, password: password}).toArray();
-  console.log('Repository - getUsers - Found documents =>', findResult);
+  console.log('Repository - getAdmin - Found documents =>', findResult);
   return findResult;
 }
 
@@ -180,7 +176,7 @@ async function saveAluguel(aluguel) {
 
 async function compareEmails(user) {
   const findResult = await user_collection.find({}).toArray();
-  console.log('Repository - getAllAlugueis - Found documents =>', findResult);
+  console.log('Repository - compareEmail - Found documents =>', findResult);
   return findResult;
 }
 
