@@ -315,10 +315,10 @@ app.get('/loja/alugar/:nome', async (req, res) => {
 })
 
 app.post('/loja/alugar/:nome', async (req, res) => {
-  console.log("req nome admin/edt carro", req.params.nome);
-  const nomeCarro = req.params.nome; // Obtém o nome do carro a ser editado
-  const carro = await mongoRepository.getCarroByName(nomeCarro);
 
+  console.log("req nome admin/edt carro", req.params.nome);
+  const nomeCarro = req.params.nome; 
+  const carro = await mongoRepository.getCarroByName(nomeCarro);
   const aluguel = {
     nomeUser: req.session.user.email,
     carro: carro,
@@ -328,21 +328,61 @@ app.post('/loja/alugar/:nome', async (req, res) => {
     formaPagamento: req.body.formaPagamento, 
     status: "Aguardando Confirmação"
   };
+
+  console
   await mongoRepository.saveAluguel(aluguel);
   res.redirect('/loja/aluguel');
 });
-
 
 app.get('/loja/aluguel', async (req, res) => {
   if (req.session.userAuthenticated) {
     const aluguel = await mongoRepository.getAluguelByEmail(req.session.user.email);
     res.render('loja/aluguel', {
-      aluguel: aluguel // Coloque o objeto aluguel em um array
+      aluguel: aluguel 
     });
   } else {
     res.redirect('/user/signin');
   }
 });
+
+app.get('/admin/aluguel', async (req, res) => {
+  console.log("admin aluguel get")
+  if (req.session.adminAuthenticated) {
+    const aluguel = await mongoRepository.getAllAlugueis();
+    res.render('admin/aluguel', {
+      aluguel: aluguel 
+    });
+  } else {
+    res.redirect('/user/signin');
+  }
+});
+
+const { ObjectId } = require('mongodb');
+
+app.post('/admin/aluguel/:id', async (req, res) => {
+  console.log("admin aluguel post");
+  if (req.session.adminAuthenticated) {
+    try {
+      const idAluguel = req.params.id;
+      const status = req.body.status ; 
+      
+      const objectId = new ObjectId(idAluguel);
+      await mongoRepository.editAluguel(objectId, status); 
+      const aluguel = await mongoRepository.getAllAlugueis();
+      console.log("admin aluguel post", objectId);
+      console.log("admin aluguel post", status);
+  
+      console.log("admin aluguel post", await mongoRepository.editAluguel(objectId, status));
+      res.redirect('/admin/aluguel');
+    } catch (err) {
+      console.error(`Erro ao editar o aluguel: ${err}`);
+      res.redirect('/admin/aluguel');
+    }
+  } else {
+    res.redirect('/admin/signin');
+  }
+});
+
 
 
 

@@ -60,7 +60,7 @@
             const valorCalculado = diffDays * precoDiaria;
             valorTotal.textContent = `R$ ${valorCalculado.toFixed(2)}`;
             const inputValorTotal = document.getElementById('input-valor-total');
-            inputValorTotal.value = valorCalculado.toFixed(2); // Atualiza o valor do input oculto
+            inputValorTotal.value = valorCalculado.toFixed(2);
         }
 
         inputInicio.addEventListener('input', calcularDiarias);
@@ -72,23 +72,22 @@
         const inputInicio = document.getElementById('input-inicio');
         const inputFim = document.getElementById('input-fim');
 
-        // Verifica se todos os campos estão preenchidos
+
         if (inputInicio.value.trim() === '' || inputFim.value.trim() === '') {
             alert('Por favor, preencha todos os campos.');
-            return false; // Impede o envio do formulário
+            return false;
         }
 
-        // Verifica se a data de início é anterior ou igual à data de fim
+
         const inicio = new Date(inputInicio.value);
         const fim = new Date(inputFim.value);
         if (inicio > fim) {
             alert('A data de início deve ser anterior ou igual à data de fim.');
-            return false; // Impede o envio do formulário
+            return false; 
         }
 
-        return true; // Permite o envio do formulário
+        return true; 
     }
 </script>
 </body>
 </html>
-

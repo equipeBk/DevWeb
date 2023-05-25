@@ -12,6 +12,8 @@ var carros_collection;
 var admin_collection;
 var aluguel_collection;
 
+const { ObjectId } = require('mongodb');
+
 async function main() {
   // Use connect method to connect to the server
   await client.connect();
@@ -54,6 +56,13 @@ async function getAluguelByEmail(email) {
 async function editCarro(nomeCarro, novasInformacoes) {
   const updateResult = await carros_collection.updateOne({ nome: nomeCarro }, { $set: novasInformacoes });
   console.log('Repository - editCarro - Updated document:', updateResult);
+  return updateResult;
+}
+
+async function editAluguel(idAluguel, novasInformacoes) {
+  const objectId = new ObjectId(idAluguel);
+  const updateResult = await carros_collection.updateOne({ _id: objectId }, { $set: novasInformacoes });
+  console.log('Repository - editAluguel - Updated document:', updateResult);
   return updateResult;
 }
 
@@ -189,6 +198,7 @@ exports.getAdmin = getAdmin;
 exports.editCarro = editCarro;
 exports.editUser = editUser;
 exports.editUserPass = editUserPass;
+exports.editAluguel = editAluguel;
 
 exports.getAluguelByEmail = getAluguelByEmail;
 exports.getCarroByName = getCarroByName;

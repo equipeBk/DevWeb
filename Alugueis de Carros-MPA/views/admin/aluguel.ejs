@@ -20,5 +20,32 @@
             </ul>
         </div>
     </header>
+
+    <div class="grid-container">
+        <% for (let i = 0; i < aluguel.length; i++) { %>
+          <div class="grid-item">
+            <img src="<%= aluguel[i].carro.imagem %>" alt="carro" width="400px">
+            <p>Cor: <%= aluguel[i].carro.cor %></p>
+            <p>Valor: <%= aluguel[i].carro.valor %></p>
+            <p>Preço da diária: <%= aluguel[i].carro.precoDiaria %></p>
+            <p>Status: <%= aluguel[i].status %></p>
+            <p>Data de Início: <%= aluguel[i].dataInicio %></p>
+            <p>Data de Fim: <%= aluguel[i].dataFim %></p>
+            <p>Valor Total: <%= aluguel[i].valorTotal %></p>
+            <p>Cliente: <%= aluguel[i].nomeUser %></p>
+      
+            <% if (aluguel[i].status != "Confirmado" || aluguel[i].status != "Rejeitado" ) { %>
+              <form action="/admin/aluguel/<%= aluguel[i]._id %>" method="POST">
+                <input type="hidden" name="_method" value="post">
+                <button type="submit" name="status" value="Confirmado">ACEITAR</button>
+                <button type="submit" name="status" value="Rejeitado">REJEITAR</button>
+              </form>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+      
+
+
 </body>
 </html>
