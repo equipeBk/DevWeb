@@ -71,12 +71,12 @@ const clientAuth = basicAuth({
 
 
 ///pagina de criar conta
-app.get('/user/signup', function (req, res) {
+app.get('/signup', function (req, res) {
   message = req.body.message
   res.render('user/signup.ejs');
 });
 
-app.post('/user/signup', async (req, res) => {
+app.post('/signup', async (req, res) => {
   try {
     let email = req.body.email
     const isEmailRegistered = await mongoRepository.isEmailAlreadyRegistered(email);
@@ -122,7 +122,7 @@ app.post('/user/signup', async (req, res) => {
 });
 
 ////pagina de login user
-app.get('/user/signin', function (req, res) {
+app.get('/signin', function (req, res) {
   message = req.body.message
   res.render('user/signin.ejs');
   console.log(" app.get user/signin")
@@ -130,7 +130,7 @@ app.get('/user/signin', function (req, res) {
 
 
 ////fazendo login do user porem...
-app.post('/user/signin', async (req, res) => {
+app.post('/signin', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -200,7 +200,7 @@ app.get('/loja', (req, res) => {
       })
     })
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 
 })
@@ -211,7 +211,7 @@ app.get('/loja/conta', async (req, res) => {
       user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
     });
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
@@ -223,7 +223,7 @@ app.get('/loja/conta-editar', async (req, res) => {
       user: await mongoRepository.isEmailAlreadyRegistered(req.session.user.email)
     });
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
@@ -260,7 +260,7 @@ app.post('/loja/conta-editar', async (req, res) => {
       res.redirect('/loja/conta');
     }
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
@@ -269,7 +269,7 @@ app.get('/loja/senha-editar', (req, res) => {
   if (req.session.userAuthenticated) {
     res.render('loja/senha-editar.ejs');
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
@@ -298,7 +298,7 @@ app.post('/loja/senha-editar', async (req, res) => {
       res.redirect('/loja/conta');
     }
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 })
 
@@ -341,7 +341,7 @@ app.get('/loja/aluguel', async (req, res) => {
       aluguel: aluguel 
     });
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
@@ -353,7 +353,7 @@ app.get('/admin/aluguel', async (req, res) => {
       aluguel: aluguel 
     });
   } else {
-    res.redirect('/user/signin');
+    res.redirect('/signin');
   }
 });
 
