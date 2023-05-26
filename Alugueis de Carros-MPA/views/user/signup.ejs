@@ -11,7 +11,7 @@
     <script>
         function check(input) {
             if (input.value !== document.getElementById('password').value) {
-                input.setCustomValidity('Passwords must match');
+                input.setCustomValidity('Senhas diferentes');
             } else {
                 input.setCustomValidity('');
             }
@@ -22,10 +22,10 @@
 <body>
 
         <form class="form-container" action="/signup" method="post">
-            <h5>CADASTRO USUARIO</h5>
-            Name: <input type="text" name="name"  required/><br />
+             <h5>CADASTRO USUÁRIO</h5>
+            Nome: <input type="text" name="name"  required/><br />
             Data de nascimento: <input type="date" name="dataNascimento"  required/><br />
-            Genero: <select name="genero"  required> <br>
+            Gênero: <select name="genero"  required> <br>
                 <option name="feminino">feminino</option>
                 <option name="masculino">masculino</option>
             </select> <br>
@@ -35,13 +35,11 @@
                 <p class="error" ><%= message %></p>
               <% } %>
           
-        <p>Senha com uma letra maiuscula, um numero, uma minuscula e 8 caracteres</p>
-        <label for="password">Password:</label>
+        <label for="password">Senha:</label>
         <input type="text" id="password" name="password" required>
 
-        <label for="confirm-password">Confirm Password:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" oninput="check(this)" required>
+        <label for="confirm-password">Confirme sua Senha:</label>
+        <input type="password" id="confirm-password"  required oninput="check(this)" required>
         <p id="message"></p>
         <input type="submit" value="Save" /><br>
         </form>

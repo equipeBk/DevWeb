@@ -1,14 +1,10 @@
 const { MongoClient } = require('mongodb');
 const { ObjectId } = require('mongodb');
 
-// Rest of your code
 
-
-// Connection URL
 const url = 'mongodb://root:rootpwd@localhost:27017';
 const client = new MongoClient(url);
 
-// Database Name
 const dbName = 'aluguelCarros';
 
 var user_collection;
@@ -17,7 +13,7 @@ var admin_collection;
 var aluguel_collection;
 
 async function main() {
-  // Use connect method to connect to the server
+ 
   await client.connect();
   console.log('Connected successfully to Mongo server');
   const db = client.db(dbName);
@@ -25,7 +21,6 @@ async function main() {
   carros_collection = db.collection('carros');
   admin_collection =db.collection('admin');
   aluguel_collection =db.collection('aluguel');
-  // the following code examples can be pasted here...
    
   return 'done.';
 }
@@ -33,16 +28,13 @@ async function main() {
 main()
   .then(console.log)
   .catch(console.error);
-//   .finally(() => client.close());
 
-
-///pegar o user
 async function getUsers(email, password) {
     const findResult = await user_collection.find({email: email, password: password}).toArray();
     console.log('Repository - getUsers - Found documents =>', findResult);
     return findResult;
 }
-///pegar o carro
+
 async function getCarroByName(nome) {
   const findResult = await carros_collection.findOne({ nome: nome });
   console.log('Repository - getCarroByName - Found document:', findResult);
@@ -82,21 +74,18 @@ async function editUser(emailUser, novasInformacoes) {
   return updateResult;
 }
 
-///pegar o admin
 async function getAdmin(email, password) {
   const findResult = await admin_collection.find({email: email, password: password}).toArray();
   console.log('Repository - getAdmin - Found documents =>', findResult);
   return findResult;
 }
 
-////logando o usuario
 async function getUsersFromDB() {
   const users = await user_collection.find({}).toArray();
   console.log('Found users:', users);
   return users.map(({ email, password }) => ({ email, password }));
 }
 
-///salvar os carros cadastrados
 async function saveCarros(carros){
   const result = await carros_collection.insertOne(carros)
   console.log('Repository - saveCarro - Inserted carro')
@@ -114,8 +103,6 @@ async function isEmailAlreadyRegistered(email) {
   }
 }
 
-
-///salvar o usuario
 async function saveUser(user){
   const result = await user_collection.insertOne(user)
   console.log('Repository - saveuser - Inserted user')
@@ -123,24 +110,18 @@ async function saveUser(user){
   return result;
 }
 
-
-////deletar usuario apesar de n precisar disso
 async function deleteUser(user) {
   const result = await user_collection.deleteOne(user)
   console.log(`Usuario com value ${deleteUser.name} excluída do banco de dados`)
   return result
 }
 
-////deletar carro se disponivel
 async function deleteCarros(carros) {
   const result = await carros_collection.deleteOne(carros)
   console.log(`Carro com id ${carros} excluído do banco de dados`)
   return result
 }
 
-
-
-///alugueis do usuario
 async function getAluguelByUser(user) {
   console.log('getAluguelByUser - Username param:', user.username)
   
@@ -150,16 +131,12 @@ async function getAluguelByUser(user) {
   return findResult;
 }
 
-
-///todos os carros
 async function getAllCarros() {
   const findResult = await carros_collection.find({}).toArray();
   console.log('Repository - getAllCarros - Found documents =>', findResult);
   return findResult;
 }
 
-
-/////todos os alugueis
 async function getAllAlugueis() {
   const findResult = await aluguel_collection.find({}).toArray();
   console.log('Repository - getAllAlugueis - Found documents =>', findResult);
@@ -173,29 +150,21 @@ async function saveAluguel(aluguel) {
   return result;
 }
 
-
 async function compareEmails(user) {
   const findResult = await user_collection.find({}).toArray();
   console.log('Repository - compareEmail - Found documents =>', findResult);
   return findResult;
 }
 
-
-
-
-
 exports.deleteUser = deleteUser;
 exports.deleteCarros = deleteCarros;
 exports.saveUser = saveUser;
-
 exports.getUsers = getUsers;
 exports.getAdmin = getAdmin;
-
 exports.editCarro = editCarro;
 exports.editUser = editUser;
 exports.editUserPass = editUserPass;
 exports.editAluguel = editAluguel;
-
 exports.getAluguelByEmail = getAluguelByEmail;
 exports.getCarroByName = getCarroByName;
 exports.getAluguelByUser = getAluguelByUser;
@@ -203,9 +172,6 @@ exports.getAllCarros = getAllCarros;
 exports.compareEmails = compareEmails;
 exports.getAllAlugueis = getAllAlugueis;
 exports.isEmailAlreadyRegistered = isEmailAlreadyRegistered;
-
 exports.saveCarros = saveCarros;
 exports.saveAluguel = saveAluguel;
-
-
 exports.getUsersFromDB = getUsersFromDB;

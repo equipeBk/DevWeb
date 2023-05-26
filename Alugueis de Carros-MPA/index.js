@@ -8,8 +8,6 @@ const MongoStore = require('connect-mongo');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 
-// Rest of your code
-
 module.exports = router;
 const app = express()
 const port = 3000
@@ -22,7 +20,6 @@ app.use(express.json())
 app.use(express.urlencoded({
   extended: true
 }))
-
 
 const mongoRepository = require('./repository/mongo-repository')
 
@@ -44,8 +41,6 @@ app.use(
     }),
   })
 );
-
-
 
 const adminAuth = basicAuth({
   authorizer: async (email, password, callback) => {
@@ -72,8 +67,6 @@ const clientAuth = basicAuth({
   unauthorizedResponse: 'Acesso não autorizado como cliente'
 });
 
-
-
 app.get('/', (req, res) => {
   console.log('GET - index');
 
@@ -84,8 +77,6 @@ app.get('/', (req, res) => {
     });
   });
 });
-
-
 
 app.get('/signup', function (req, res) {
   message = req.body.message
@@ -142,7 +133,6 @@ app.get('/signin', function (req, res) {
   res.render('user/signin.ejs');
   console.log(" app.get user/signin")
 });
-
 
 app.post('/signin', async (req, res) => {
   const email = req.body.email;
@@ -284,10 +274,24 @@ app.get('/loja/senha-editar', (req, res) => {
   }
 });
 
+app.get('/loja/senha-editar', (req, res) => {
+  message = req.body.message
+  if (req.session.userAuthenticated) {
+    res.render('loja/senha-editar.ejs');
+  } else {
+    res.redirect('/signin');
+  }
+});
+
 app.post('/loja/senha-editar', async (req, res) => {
   message = req.body.message
   let oldpassword = req.body.oldpassword;
   if (req.session.userAuthenticated) {
+    if (oldpassword != req.session.user.password) {  
+      res.render('loja/senha-editar', {
+        message: 'senha anterior invalida'
+      });
+    } else {
     try {
       if (oldpassword === req.session.user.password) {
         let emailUser = req.session.user.email;
@@ -308,6 +312,7 @@ app.post('/loja/senha-editar', async (req, res) => {
       console.error(`Erro ao editar o user: ${err}`);
       res.redirect('/loja/conta');
     }
+  }
   } else {
     res.redirect('/signin');
   }
@@ -402,8 +407,6 @@ app.post('/admin/aluguel/:id', async (req, res) => {
   }
 });
 
-
-///loja admin
 app.get('/admin/loja', function (req, res) {
   console.log("/admin/loja auth", req.session.adminAuthenticated);
   const user = req.session.user;
@@ -448,7 +451,6 @@ app.post('/add-carro', (req, res) => {
 
 })
 
-///deletar carro
 app.get('/deletar-carro', (req, res) => {
   if (req.session.adminAuthenticated) {
     let deleteCarros = req._id
@@ -464,7 +466,6 @@ app.get('/deletar-carro', (req, res) => {
 
 })
 
-// Editar carro
 app.get('/admin/carro-editar/:nome', async (req, res) => {
   const nomeCarro = req.params.nome;
   if (req.session.adminAuthenticated) {
@@ -488,8 +489,6 @@ app.get('/admin/carro-editar/:nome', async (req, res) => {
   }
 });
 
-
-// Editar carro por nome
 app.post('/admin/editar-carro/:nome', async (req, res) => {
   console.log("req nome admin/edt carro", req.params.nome)
   if (req.session.adminAuthenticated) {
@@ -516,8 +515,6 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
 
 });
 
-
-///buscar carros
 app.post('/busca', (req, res) => {
   const nome = req.body.busca.toLowerCase(); 
   const marca = req.body.busca.toLowerCase(); 
@@ -539,7 +536,6 @@ app.post('/busca', (req, res) => {
     });
 });
 
-
 app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -550,8 +546,6 @@ app.get('/logout', (req, res) => {
     }
   });
 });
-
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
