@@ -161,14 +161,14 @@ app.post('/signin', async (req, res) => {
   }
 });
 
-app.get('/admin/signin', function (req, res) {
+app.get('/admin', function (req, res) {
   message = req.body.message
   res.render('admin/signin.ejs');
   console.log(" app.get admin/signin")
 });
 
-app.post('/admin/signin', async (req, res) => {
-  console.log("/admin/signin auth", req.session.adminAuthenticated);
+app.post('/admin', async (req, res) => {
+  console.log("/admin auth", req.session.adminAuthenticated);
   const email = req.body.email;
   const password = req.body.password;
 
@@ -403,7 +403,7 @@ app.post('/admin/aluguel/:id', async (req, res) => {
       res.redirect('/admin/aluguel');
     }
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 });
 
@@ -418,7 +418,7 @@ app.get('/admin/loja', function (req, res) {
       console.log("get admin/loja");
     });
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 });
 
@@ -427,7 +427,7 @@ app.get('/admin/add-carro', function (req, res) {
     res.render('admin/add-carro.ejs');
     console.log(" admin/add-carro")
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 
 });
@@ -446,7 +446,7 @@ app.post('/add-carro', (req, res) => {
       res.redirect('admin/loja')
     })
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 
 })
@@ -461,7 +461,7 @@ app.get('/deletar-carro', (req, res) => {
         res.redirect('admin/loja')
       })
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 
 })
@@ -485,7 +485,7 @@ app.get('/admin/carro-editar/:nome', async (req, res) => {
       res.redirect('/admin/loja');
     }
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 });
 
@@ -510,7 +510,7 @@ app.post('/admin/editar-carro/:nome', async (req, res) => {
       const carro = await mongoRepository.getCarroByName(nomeCarro);
     }
   } else {
-    res.redirect('/admin/signin');
+    res.redirect('/admin');
   }
 
 });
