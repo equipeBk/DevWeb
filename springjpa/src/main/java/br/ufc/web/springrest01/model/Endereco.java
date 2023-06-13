@@ -1,18 +1,14 @@
 package br.ufc.web.springrest01.model;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class Endereco {
-
-    @Column(length = 2)
     private String estado;
     private String cidade;
     private String rua;
-    @Column(length = 10)
     private String numero;
-    
+
     public String getEstado() {
         return estado;
     }

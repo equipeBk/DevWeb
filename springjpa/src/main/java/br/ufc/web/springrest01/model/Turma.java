@@ -1,7 +1,7 @@
 package br.ufc.web.springrest01.model;
 
+import java.util.Date;
 import java.util.List;
-
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,43 +15,44 @@ public class Turma {
     @GeneratedValue
     private int codigo;
 
+    @ElementCollection
+    private List<Date> horarios;
+
     @ManyToMany
     private List<Alunos> alunos;
 
     @ManyToOne
     private Disciplinas disciplinas;
 
-    @ElementCollection
-    private List<Horarios> horarios;
-    
-
-    
     public int getCodigo() {
         return codigo;
     }
+
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
+
     public List<Alunos> getAlunos() {
         return alunos;
     }
+
     public void setAlunos(List<Alunos> alunos) {
         this.alunos = alunos;
     }
+
     public Disciplinas getDisciplinas() {
         return disciplinas;
     }
+
     public void setDisciplinas(Disciplinas disciplinas) {
         this.disciplinas = disciplinas;
     }
 
-    public List<Horarios> getHorarios() {
+    public List<Date> getHorarios() {
         return horarios;
     }
-    public void setHorarios(List<Horarios> horarios) {
+
+    public void setHorarios(List<Date> horarios) {
         this.horarios = horarios;
     }
-    
-    
-    
 }

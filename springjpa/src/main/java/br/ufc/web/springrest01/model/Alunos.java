@@ -1,6 +1,7 @@
 package br.ufc.web.springrest01.model;
 
 import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ public class Alunos {
     private String name;
     private String email;
     private String telefone;
-    private java.util.Date dataNasc;
+    private Date dataNasc;
 
     @Embedded 
     private Endereco endereco;
@@ -66,11 +67,11 @@ public class Alunos {
         this.telefone = telefone;
     }
 
-    public java.util.Date getDataNasc() {
+    public Date getDataNasc() {
         return dataNasc;
     }
 
-    public void setDataNasc(java.util.Date dataNasc) {
+    public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
     }
 
