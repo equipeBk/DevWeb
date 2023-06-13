@@ -10,13 +10,14 @@ public class Turma {
 	private int codigo;
 	private String disciplina;
 	private int semestre;
-	private List<Aluno> alunos;
+	private List<Aluno>  alunos = new ArrayList<>();
 
 	public Turma(int codigo, String disciplina, int semestre, List<Aluno> alunos) {
         this.codigo = codigo;
         this.disciplina = disciplina;
         this.semestre = semestre;
-        this.alunos = new ArrayList<>(alunos);
+        if (alunos != null && alunos.size() > 0)
+        	alunos = new ArrayList<>(alunos);
     }
 
 	public Turma() {
