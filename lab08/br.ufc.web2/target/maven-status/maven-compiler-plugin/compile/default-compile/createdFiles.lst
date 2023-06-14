@@ -1,0 +1,9 @@
+web2/service/DisciplinaService.class
+web2/model/Turma.class
+web2/repository/DisciplinaRepository.class
+web2/rest/Controller.class
+web2/Application.class
+web2/repository/TurmaRepository.class
+web2/model/Endereco.class
+web2/model/Disciplina.class
+web2/model/Aluno.class

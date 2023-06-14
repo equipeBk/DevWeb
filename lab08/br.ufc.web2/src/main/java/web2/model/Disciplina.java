@@ -13,8 +13,6 @@ public class Disciplina {
 	private String nome;
 	private int creditos;
 	
-	
-	
 	public int getCodigo() {
 		return codigo;
 	}
