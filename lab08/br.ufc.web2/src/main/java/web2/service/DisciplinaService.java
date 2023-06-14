@@ -13,7 +13,11 @@ public class DisciplinaService {
 	@Autowired
     DisciplinaRepository disciplinaRepository;
 
-	
+	public Iterable<Disciplina> getsDisciplina(){
+		
+		return disciplinaRepository.findAll();
+	}
+
 	public Disciplina addDisciplina(Disciplina disciplina) {
 		
 		return disciplinaRepository.save(disciplina);
