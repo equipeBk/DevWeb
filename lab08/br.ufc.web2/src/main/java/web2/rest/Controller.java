@@ -1,14 +1,17 @@
 package web2.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import web2.model.Aluno;
 import web2.model.Disciplina;
 import web2.model.Turma;
+import web2.service.AlunoService;
 import web2.service.DisciplinaService;
 import web2.service.TurmaService;
 
@@ -16,31 +19,47 @@ import web2.service.TurmaService;
 @RequestMapping("/api")
 public class Controller {
 
-	//Disciplina
+    @Autowired
+    private DisciplinaService disciplinaService;
 
-	@Autowired
-	DisciplinaService disciplinaService;
+    @GetMapping("/disciplina")
+    public Iterable<Disciplina> getDisciplina() {
+        return disciplinaService.getsDisciplina();
+    }
 
-	@GetMapping("/disciplina")
+    @PostMapping("/disciplina")
+    public void addDisciplina(@RequestBody Disciplina disciplina) {
+        disciplinaService.addDisciplina(disciplina);
+    }
 
-	public Iterable<Disciplina> getDisciplina(){
-		return disciplinaService.getsDisciplina();
-	}
+    @Autowired
+    private TurmaService turmaService;
 
-	@PostMapping("/disciplina")
+    @PostMapping("/turma")
+    public void criarTurma(@RequestBody Turma turma) {
+        turmaService.salvarTurma(turma);
+    }
 
-	public void addDisciplina(@RequestBody Disciplina disciplina) {
-		disciplinaService.addDisciplina(disciplina);
+    @GetMapping("/turma")
+    public Iterable<Turma> getTurma() {
+        return turmaService.getTurmas();
+    }
+    
+    @PostMapping("/turma/{id}/aluno")
+    public void addAlunoParaTurma(@PathVariable("id") int id, @RequestBody Aluno aluno) {
+        turmaService.addAlunoParaTurma(id, aluno);
+    }
 
-	}
+    @Autowired
+    private AlunoService alunoService;
 
-	//Turma
-	@Autowired
-	TurmaService turmaService;
+    @GetMapping("/aluno")
+    public Iterable<Aluno> getAluno() {
+        return alunoService.getsAluno();
+    }
 
-	@PostMapping("/disciplina")
-
-	public void addTurma(@RequestBody Turma turma) {
-		turmaService.addTurma(turma);
-	}
+    @PostMapping("/aluno")
+    public void addAluno(@RequestBody Aluno aluno) {
+        alunoService.addAluno(aluno);
+    }
 }
