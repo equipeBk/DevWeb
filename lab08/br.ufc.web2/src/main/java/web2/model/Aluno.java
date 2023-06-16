@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Aluno {
@@ -16,7 +19,8 @@ public class Aluno {
     @GeneratedValue
     private int matricula;
     
-    @ManyToMany(mappedBy = "alunos")
+    @ManyToMany(mappedBy = "alunos", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Turma> turmas;
 
     private String name;

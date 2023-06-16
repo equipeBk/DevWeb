@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-
 @Entity
 public class Turma {
+
     @Id
     @GeneratedValue
     private int codigo;
@@ -26,6 +26,8 @@ public class Turma {
     @ManyToOne
     private Disciplina disciplina;
 
+    // Remova as injeções de dependência dos repositórios aqui
+
     public int getCodigo() {
         return codigo;
     }
@@ -34,11 +36,11 @@ public class Turma {
         this.codigo = codigo;
     }
 
-    public List<Aluno> getAluno() {
+    public List<Aluno> getAlunos() {
         return alunos;
     }
 
-    public void setAluno(List<Aluno> alunos) {
+    public void setAlunos(List<Aluno> alunos) {
         this.alunos = alunos;
     }
 
@@ -57,4 +59,6 @@ public class Turma {
     public void setHorarios(List<Date> horarios) {
         this.horarios = horarios;
     }
+
+
 }

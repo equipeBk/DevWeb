@@ -12,6 +12,7 @@ public class DisciplinaService {
 	
 	@Autowired
     DisciplinaRepository disciplinaRepository;
+	Disciplina disciplina = new Disciplina();
 
 	public Iterable<Disciplina> getsDisciplina(){
 		
