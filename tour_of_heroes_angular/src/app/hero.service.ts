@@ -9,10 +9,9 @@ import { HEROES } from './mock-heroes';
 })
 export class HeroService {
   
-  private heroesUrl = 'http://localhost:8080/api/hero';
+  private heroesUrl = 'http://localhost:8082/api/heroe';
 
   constructor(private http: HttpClient) { }
-
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl);
   }
