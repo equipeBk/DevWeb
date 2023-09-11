@@ -29,3 +29,6 @@ node .
 
 
 Por fim acesse o endereço `localhost:3000` onde o projeto está rodando
+
+grant all on *.* to 'root'@'%' identified by 'root';
+flush PRIVILEGES;
